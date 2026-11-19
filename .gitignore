@@ -1,0 +1,10 @@
+# Chỉ track plugin, còn lại trong EasyLugg/ chỉ để chạy local
+EasyLugg/*
+!EasyLugg/wp-content/
+EasyLugg/wp-content/*
+!EasyLugg/wp-content/plugins/
+EasyLugg/wp-content/plugins/*
+!EasyLugg/wp-content/plugins/easylugg-booking/
+
+# File rác
+**/.DS_Store

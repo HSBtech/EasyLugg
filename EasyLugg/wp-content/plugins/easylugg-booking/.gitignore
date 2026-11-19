@@ -1,0 +1,7 @@
+backup-*/
+staging-refactor/
+*.zip
+EasyLugg-Booking-standalone.html
+EasyLugg-Booking-Texts.md
+backup.log
+stitch-design/
