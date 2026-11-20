@@ -8,3 +8,17 @@ EasyLugg/wp-content/plugins/*
 
 # File rác
 **/.DS_Store
+
+# Hướng dẫn cho AI agent: chỉ bản ở thư mục gốc
+!/AGENTS.md
+!/CLAUDE.md
+
+# Không thuộc plugin: công cụ AI / IDE / tài liệu thiết kế, không commit
+.claude/
+.github/
+.mcp.json
+docs/
+.vscode/
+.idea/
+*.code-workspace
+*.zip

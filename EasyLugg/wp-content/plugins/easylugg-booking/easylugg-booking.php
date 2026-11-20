@@ -15,11 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Storage bookings live in their own module (includes/storage.php).
 require_once plugin_dir_path( __FILE__ ) . 'includes/storage.php';
+// Internal Dashboard (SRS: EasyLugg-Dashboard-SRS-v1.0-DRAFT-en.md).
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-rules.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-setup.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-config.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-accounts.php';
 
 final class EasyLugg_Booking_Plugin {
 	const VERSION       = '1.0.1';
 	const PRICES_OPTION = 'easylugg_booking_prices';
-	const DB_VERSION    = '1';
+	const DB_VERSION    = '2';
 	const DB_OPTION     = 'easylugg_booking_db_version';
 	const NONCE_ACTION  = 'easylugg_booking_submit';
 	const SHOW_TRUST_BADGES = false; // 'Live GPS tracking' + 'Tamper-proof Zip' — hidden until the team activates them.
@@ -58,9 +64,11 @@ final class EasyLugg_Booking_Plugin {
 		add_action( 'wp_ajax_easylugg_booking_lookup', array( $this, 'ajax_lookup_booking' ) );
 		add_action( 'wp_ajax_nopriv_easylugg_booking_lookup', array( $this, 'ajax_lookup_booking' ) );
 		add_action( 'admin_menu', array( $this, 'register_admin_pages' ) );
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_post_easylugg_booking_update', array( $this, 'update_booking_status' ) );
 		add_action( 'admin_post_easylugg_booking_download_photo', array( $this, 'download_booking_photo' ) );
+		EasyLugg_Dashboard_Setup::hooks();
+		EasyLugg_Dashboard::hooks( $this );
+		EasyLugg_Dashboard_Accounts::hooks();
 	}
 
 	/**
@@ -68,6 +76,7 @@ final class EasyLugg_Booking_Plugin {
 	 */
 	public static function activate() {
 		self::create_database_table();
+		EasyLugg_Dashboard_Setup::install();
 		add_option( self::PRICES_OPTION, self::default_prices() );
 		update_option( self::DB_OPTION, self::DB_VERSION );
 	}
@@ -75,7 +84,7 @@ final class EasyLugg_Booking_Plugin {
 	/**
 	 * @return string
 	 */
-	private static function table_name() {
+	public static function table_name() {
 		global $wpdb;
 
 		return $wpdb->prefix . 'easylugg_bookings';
@@ -106,10 +115,18 @@ final class EasyLugg_Booking_Plugin {
 			customer_name varchar(190) NOT NULL,
 			booking_data longtext NOT NULL,
 			photo_path text NOT NULL,
+			source varchar(20) NULL DEFAULT NULL,
+			created_by bigint unsigned NULL DEFAULT NULL,
+			invoice_no varchar(40) NULL DEFAULT NULL,
+			needs_review tinyint(1) NOT NULL DEFAULT 0,
+			row_version int unsigned NOT NULL DEFAULT 0,
+			updated_at datetime NULL DEFAULT NULL,
 			PRIMARY KEY  (booking_code),
 			UNIQUE KEY request_key (request_key),
+			UNIQUE KEY invoice_no (invoice_no),
 			KEY service_date (service_date),
-			KEY status (status)
+			KEY status (status),
+			KEY needs_review (needs_review)
 		) {$charset_collate};";
 
 		dbDelta( $sql );
@@ -132,6 +149,7 @@ final class EasyLugg_Booking_Plugin {
 	public function maybe_upgrade_database() {
 		if ( self::DB_VERSION !== get_option( self::DB_OPTION ) ) {
 			self::create_database_table();
+			EasyLugg_Dashboard_Setup::install();
 			update_option( self::DB_OPTION, self::DB_VERSION );
 		}
 	}
@@ -161,11 +179,11 @@ final class EasyLugg_Booking_Plugin {
 	 *
 	 * @return array<int, string>
 	 */
-	private static function airport_slots() {
-		return array( '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '19:00', '19:30', '20:00' );
+	public static function airport_slots() {
+		return EasyLugg_Dashboard_Config::airport_slots();
 	}
 
-	private static function country_codes() {
+	public static function country_codes() {
 		return array(
 			'84'  => 'Vietnam',
 			'82'  => 'South Korea',
@@ -187,7 +205,7 @@ final class EasyLugg_Booking_Plugin {
 	/**
 	 * @return array<string, int>
 	 */
-	private function prices() {
+	public function prices() {
 		$defaults = self::default_prices();
 		$saved    = get_option( self::PRICES_OPTION, array() );
 		$saved    = is_array( $saved ) ? $saved : array();
@@ -207,13 +225,14 @@ final class EasyLugg_Booking_Plugin {
 	 *
 	 * @return array<string, array<string, string>>
 	 */
-	private function texts() {
+	public function texts() {
 		static $texts = null;
 		if ( null === $texts ) {
 			$texts = include plugin_dir_path( __FILE__ ) . 'texts.php';
 			if ( ! is_array( $texts ) ) {
 				$texts = array();
 			}
+			$texts = EasyLugg_Dashboard_Config::apply_hub_texts( $texts );
 		}
 		return $texts;
 	}
@@ -226,7 +245,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $key Dotted address (section.key).
 	 * @return string
 	 */
-	private function text( $key ) {
+	public function text( $key ) {
 		$texts = $this->texts();
 		$parts = explode( '.', $key, 2 );
 		if ( 2 !== count( $parts ) ) {
@@ -246,7 +265,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $name Icon slug (file name without .svg).
 	 * @return string
 	 */
-	private function icon( $name ) {
+	public function icon( $name ) {
 		$name = sanitize_file_name( $name );
 		$path = plugin_dir_path( __FILE__ ) . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $path ) ) {
@@ -267,7 +286,7 @@ final class EasyLugg_Booking_Plugin {
 	 *
 	 * @return array<int, array{displayName: array{text: string, languageCode: string}, formattedAddress: string, location: array{latitude: float, longitude: float}, id: string, types: string[]}>
 	 */
-	private function mock_hotels() {
+	public function mock_hotels() {
 		return array(
 			// Da Nang.
 			array( 'displayName' => array( 'text' => 'Novotel Danang Premier Han River', 'languageCode' => 'en' ), 'formattedAddress' => '36 Bach Dang, Hai Chau District, Da Nang, Vietnam', 'location' => array( 'latitude' => 16.068, 'longitude' => 108.225 ), 'id' => 'mock-novotel-danang-premier-han-river', 'types' => array( 'lodging' ) ),
@@ -330,23 +349,12 @@ final class EasyLugg_Booking_Plugin {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function register_settings() {
-		register_setting(
-			'easylugg_booking_settings',
-			self::PRICES_OPTION,
-			array( 'sanitize_callback' => array( $this, 'sanitize_prices' ) )
-		);
-	}
-
-	/**
 	 * Keep anonymous booking nonces and private tracking links out of page caches.
 	 *
 	 * @return void
 	 */
 	public function disable_booking_page_cache() {
-		if ( is_page( 'bookings' ) ) {
+		if ( is_page( 'bookings' ) || is_page( 'dashboard' ) || $this->is_dashboard_request() ) {
 			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 				define( 'DONOTCACHEPAGE', true );
 			}
@@ -390,51 +398,47 @@ final class EasyLugg_Booking_Plugin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'EasyLugg luggage pricing', 'easylugg-booking' ); ?></h1>
-			<p><?php esc_html_e( 'Set the estimated prices in Vietnamese dong. Delivery prices are per bag; overnight storage is charged per bag for each night after the first free night.', 'easylugg-booking' ); ?></p>
-			<?php settings_errors(); ?>
-			<form action="options.php" method="post">
-				<?php settings_fields( 'easylugg_booking_settings' ); ?>
-				<table class="form-table" role="presentation">
-					<tbody>
-						<?php
-						$labels = array(
-							'cabin'    => __( 'Cabin bag', 'easylugg-booking' ),
-							'medium'   => __( 'Medium bag', 'easylugg-booking' ),
-							'oversize' => __( 'Oversize bag', 'easylugg-booking' ),
-							'storage'  => __( 'Overnight storage', 'easylugg-booking' ),
-						);
-						$units = array(
-							'cabin'    => __( 'VND per bag', 'easylugg-booking' ),
-							'medium'   => __( 'VND per bag', 'easylugg-booking' ),
-							'oversize' => __( 'VND per bag', 'easylugg-booking' ),
-							'storage'  => __( 'VND per bag per night', 'easylugg-booking' ),
-						);
-						foreach ( $labels as $size => $label ) :
-							?>
-							<tr>
-								<th scope="row">
-									<label for="easylugg-price-<?php echo esc_attr( $size ); ?>"><?php echo esc_html( $label ); ?></label>
-								</th>
-								<td>
-									<input
-										id="easylugg-price-<?php echo esc_attr( $size ); ?>"
-										name="<?php echo esc_attr( self::PRICES_OPTION ); ?>[<?php echo esc_attr( $size ); ?>]"
-										type="number"
-										min="0"
-										max="100000000"
-										step="1000"
-										value="<?php echo esc_attr( (string) $prices[ $size ] ); ?>"
-										class="regular-text"
-										required
-									/>
-									<span class="description"><?php echo esc_html( $units[ $size ] ); ?></span>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
-				<?php submit_button(); ?>
-			</form>
+			<?php $this->render_old_page_banner( 'settings' ); ?>
+			<table class="widefat striped" style="max-width: 520px;">
+				<tbody>
+					<?php
+					$labels = array(
+						'cabin'    => __( 'Cabin bag (VND per bag)', 'easylugg-booking' ),
+						'medium'   => __( 'Medium bag (VND per bag)', 'easylugg-booking' ),
+						'oversize' => __( 'Oversize bag (VND per bag)', 'easylugg-booking' ),
+						'storage'  => __( 'Overnight storage (VND per bag per night)', 'easylugg-booking' ),
+					);
+					foreach ( $labels as $size => $label ) :
+						?>
+						<tr>
+							<th scope="row"><?php echo esc_html( $label ); ?></th>
+							<td><?php echo esc_html( number_format_i18n( (int) $prices[ $size ] ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Banner shown on the retained old wp-admin pages (SRS P-1, tick D-DB13).
+	 *
+	 * @param string $page settings|bookings.
+	 * @return void
+	 */
+	private function render_old_page_banner( $page ) {
+		?>
+		<div class="notice notice-warning inline">
+			<p>
+				<strong><?php esc_html_e( 'Old page, for reference only.', 'easylugg-booking' ); ?></strong>
+				<?php
+				echo 'settings' === $page
+					? esc_html__( 'Prices are now edited on the Dashboard under Settings → Pricing. Nothing can be saved here.', 'easylugg-booking' )
+					: esc_html__( 'Booking status is now changed on the Dashboard, where every step is checked and logged. Nothing can be changed here.', 'easylugg-booking' );
+				?>
+				<a href="<?php echo esc_url( EasyLugg_Dashboard_Setup::dashboard_url() ); ?>"><?php esc_html_e( 'Open the Dashboard', 'easylugg-booking' ); ?></a>
+			</p>
 		</div>
 		<?php
 	}
@@ -464,6 +468,7 @@ final class EasyLugg_Booking_Plugin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'EasyLugg delivery bookings', 'easylugg-booking' ); ?></h1>
+			<?php $this->render_old_page_banner( 'bookings' ); ?>
 			<p><?php esc_html_e( 'Customer details are visible only to site administrators.', 'easylugg-booking' ); ?></p>
 			<table class="widefat striped">
 				<thead>
@@ -512,7 +517,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param bool $is_storage Whether the booking is a storage booking.
 	 * @return array<string, string>
 	 */
-	private function booking_detail_labels( $is_storage ) {
+	public function booking_detail_labels( $is_storage ) {
 		return array(
 			'corridor'              => __( 'Route', 'easylugg-booking' ),
 			'service_date'          => __( 'Service date', 'easylugg-booking' ),
@@ -560,18 +565,7 @@ final class EasyLugg_Booking_Plugin {
 			<h1><?php echo esc_html( $booking->booking_code ); ?></h1>
 			<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=easylugg-bookings' ) ); ?>">&larr; <?php esc_html_e( 'All bookings', 'easylugg-booking' ); ?></a></p>
 			<p><strong><?php esc_html_e( 'Status:', 'easylugg-booking' ); ?></strong> <?php echo esc_html( $this->status_label( $booking->status ) ); ?></p>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin: 1em 0;">
-				<input type="hidden" name="action" value="easylugg_booking_update">
-				<input type="hidden" name="booking_code" value="<?php echo esc_attr( $booking->booking_code ); ?>">
-				<?php wp_nonce_field( 'easylugg_booking_update_' . $booking->booking_code ); ?>
-				<label for="easylugg-booking-status"><strong><?php esc_html_e( 'Update status', 'easylugg-booking' ); ?></strong></label>
-				<select id="easylugg-booking-status" name="status">
-					<?php foreach ( $this->status_labels() as $status => $label ) : ?>
-						<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $booking->status, $status ); ?>><?php echo esc_html( $label ); ?></option>
-					<?php endforeach; ?>
-				</select>
-				<?php submit_button( __( 'Save status', 'easylugg-booking' ), 'secondary', 'submit', false ); ?>
-			</form>
+			<?php $this->render_old_page_banner( 'bookings' ); ?>
 			<table class="widefat striped" style="max-width: 900px;">
 				<tbody>
 					<?php foreach ( $labels as $key => $label ) : ?>
@@ -598,7 +592,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param mixed $value Admin value.
 	 * @return string
 	 */
-	private function format_admin_value( $value ) {
+	public function format_admin_value( $value ) {
 		if ( is_array( $value ) ) {
 			$items = array();
 			foreach ( $value as $key => $entry ) {
@@ -633,32 +627,9 @@ final class EasyLugg_Booking_Plugin {
 	 * @return void
 	 */
 	public function update_booking_status() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to update bookings.', 'easylugg-booking' ), '', array( 'response' => 403 ) );
-		}
-
-		$code   = isset( $_POST['booking_code'] ) ? sanitize_text_field( wp_unslash( $_POST['booking_code'] ) ) : '';
-		$status = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '';
-		check_admin_referer( 'easylugg_booking_update_' . $code );
-
-		if ( ! $code || ! array_key_exists( $status, $this->status_labels() ) ) {
-			wp_die( esc_html__( 'Invalid booking status.', 'easylugg-booking' ), '', array( 'response' => 400 ) );
-		}
-
-		global $wpdb;
-		$updated = $wpdb->update(
-			self::table_name(),
-			array( 'status' => $status ),
-			array( 'booking_code' => $code ),
-			array( '%s' ),
-			array( '%s' )
-		);
-		if ( false === $updated ) {
-			wp_die( esc_html__( 'The booking status could not be saved.', 'easylugg-booking' ), '', array( 'response' => 500 ) );
-		}
-
-		wp_safe_redirect( add_query_arg( array( 'page' => 'easylugg-bookings', 'view' => $code, 'updated' => '1' ), admin_url( 'admin.php' ) ) );
-		exit;
+		// Retired (SRS P-1): the only write path for status is the Dashboard,
+		// which enforces the state machine, gates and audit log.
+		wp_die( esc_html__( 'Booking status is changed on the Dashboard.', 'easylugg-booking' ), '', array( 'response' => 410 ) );
 	}
 
 	/**
@@ -702,6 +673,11 @@ final class EasyLugg_Booking_Plugin {
 	 */
 	public function enqueue_assets() {
 		if ( ! is_page( 'bookings' ) && ! $this->page_has_booking_shortcode() ) {
+			return;
+		}
+		// The Dashboard loads its own assets (includes/dashboard.php); the
+		// customer booking scripts must not run on it.
+		if ( $this->is_dashboard_request() ) {
 			return;
 		}
 
@@ -772,6 +748,19 @@ final class EasyLugg_Booking_Plugin {
 	}
 
 	/**
+	 * Whether the current request is a page carrying [easylugg_dashboard].
+	 *
+	 * @return bool
+	 */
+	public function is_dashboard_request() {
+		if ( ! is_singular() ) {
+			return false;
+		}
+		$post = get_queried_object();
+		return $post instanceof WP_Post && has_shortcode( $post->post_content, 'easylugg_dashboard' );
+	}
+
+	/**
 	 * @return bool
 	 */
 	private function page_has_booking_shortcode() {
@@ -784,6 +773,7 @@ final class EasyLugg_Booking_Plugin {
 			has_shortcode( $post->post_content, 'bookingPlugin' )
 			|| has_shortcode( $post->post_content, 'easylugg_booking' )
 			|| has_shortcode( $post->post_content, 'easylugg_tracking' )
+			|| has_shortcode( $post->post_content, 'easylugg_dashboard' )
 		);
 	}
 
@@ -1145,6 +1135,8 @@ final class EasyLugg_Booking_Plugin {
 	 * @return string
 	 */
 	private function render_status_timeline( $status ) {
+		// A closed-out order shows the full journey as done.
+		$status  = 'completed' === $status ? 'delivered' : $status;
 		$steps   = array( 'confirmed', 'collected', 'in_transit', 'delivered' );
 		$current = array_search( $status, $steps, true );
 		$labels  = array(
@@ -1435,8 +1427,9 @@ final class EasyLugg_Booking_Plugin {
 		$service_name = $is_storage ? $this->text( 'service.storage_title' ) : $this->text( 'service.delivery_title' );
 		$is_request   = 'requested' === $booking->status;
 		$is_cancelled = 'cancelled' === $booking->status;
+		$is_no_show   = 'no_show' === $booking->status;
 		$steps        = array( 'confirmed', 'collected', 'in_transit', 'delivered' );
-		$stage_index  = array_search( $booking->status, $steps, true );
+		$stage_index  = array_search( 'completed' === $booking->status ? 'delivered' : $booking->status, $steps, true );
 
 		// Hero sub-line + route card: only real booking data. The Stitch
 		// screens show an ETA, a driver and tamper-seal numbers, but the
@@ -1507,6 +1500,8 @@ final class EasyLugg_Booking_Plugin {
 					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.on_request' ) ); ?></p>
 				<?php elseif ( $is_cancelled ) : ?>
 					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.cancelled' ) ); ?></p>
+				<?php elseif ( $is_no_show ) : ?>
+					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.no_show' ) ); ?></p>
 				<?php else : ?>
 					<?php echo $this->render_status_timeline( $booking->status ); ?>
 				<?php endif; ?>
@@ -1559,6 +1554,7 @@ final class EasyLugg_Booking_Plugin {
 
 		$is_request  = 'requested' === $booking->status;
 		$is_cancelled = 'cancelled' === $booking->status;
+		$is_no_show   = 'no_show' === $booking->status;
 
 		ob_start();
 		?>
@@ -1572,6 +1568,8 @@ final class EasyLugg_Booking_Plugin {
 					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.on_request' ) ); ?></p>
 				<?php elseif ( $is_cancelled ) : ?>
 					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.cancelled' ) ); ?></p>
+				<?php elseif ( $is_no_show ) : ?>
+					<p class="el-request-note"><?php echo esc_html( $this->text( 'tracking.no_show' ) ); ?></p>
 				<?php else : ?>
 					<?php echo $this->render_status_timeline( $booking->status ); ?>
 				<?php endif; ?>
@@ -1724,7 +1722,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param array<string, mixed> $input Unslashed request data.
 	 * @return array<string, mixed>
 	 */
-	private function validate_booking_service( $input ) {
+	public function validate_booking_service( $input ) {
 		// Storage bookings validate in their own module (includes/storage.php).
 		if ( 'storage' === $this->input_key( $input, 'service' ) ) {
 			return EasyLugg_Storage::validate( $input, $this->texts(), $this->prices() );
@@ -1824,7 +1822,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param array<string, mixed> $input Unslashed request data.
 	 * @return array<string, int>
 	 */
-	private function validate_bag_counts( $input ) {
+	public function validate_bag_counts( $input ) {
 		$bags       = isset( $input['bags'] ) && is_array( $input['bags'] ) ? $input['bags'] : array();
 		$bag_counts = array();
 		$total_bags = 0;
@@ -1849,7 +1847,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param array<string, mixed> $input Unslashed request data.
 	 * @return array{name: string, email: string, details: array<string, mixed>}
 	 */
-	private function validate_customer_details( $input ) {
+	public function validate_customer_details( $input ) {
 		$customer_name  = $this->input_text( $input, 'full_name' );
 		$customer_email = isset( $input['email'] ) && is_scalar( $input['email'] ) ? sanitize_email( $input['email'] ) : '';
 		if ( '' === $customer_name || strlen( $customer_name ) > 190 || ! is_email( $customer_email ) || strlen( $customer_email ) > 190 ) {
@@ -1971,7 +1969,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string             $delivery_date Delivery date (Y-m-d).
 	 * @return int
 	 */
-	private function calculate_estimate( $bag_counts, $service_date = '', $delivery_date = '' ) {
+	public function calculate_estimate( $bag_counts, $service_date = '', $delivery_date = '' ) {
 		$prices = $this->prices();
 		$base   = ( $bag_counts['cabin'] * $prices['cabin'] )
 			+ ( $bag_counts['medium'] * $prices['medium'] )
@@ -2009,7 +2007,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param int                   $estimate Calculated estimate.
 	 * @return array<string, mixed>
 	 */
-	private function build_booking_data( $input, $service, $bag_counts, $customer, $payment_method, $estimate ) {
+	public function build_booking_data( $input, $service, $bag_counts, $customer, $payment_method, $estimate ) {
 		$is_storage = 'storage' === ( $service['service'] ?? '' );
 		// For storage the whole estimate IS the storage fee; delivery
 		// keeps its overnight-storage calculation (bag_counts there is
@@ -2103,7 +2101,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param int                  $max_length Maximum length.
 	 * @return string
 	 */
-	private function optional_text( $input, $key, $max_length ) {
+	public function optional_text( $input, $key, $max_length ) {
 		if ( ! isset( $input[ $key ] ) || ! is_scalar( $input[ $key ] ) ) {
 			return '';
 		}
@@ -2118,7 +2116,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string               $key Input key.
 	 * @return string
 	 */
-	private function input_text( $input, $key ) {
+	public function input_text( $input, $key ) {
 		return isset( $input[ $key ] ) && is_scalar( $input[ $key ] )
 			? sanitize_text_field( $input[ $key ] )
 			: '';
@@ -2131,7 +2129,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string               $key Input key.
 	 * @return string
 	 */
-	private function input_key( $input, $key ) {
+	public function input_key( $input, $key ) {
 		return isset( $input[ $key ] ) && is_scalar( $input[ $key ] )
 			? sanitize_key( $input[ $key ] )
 			: '';
@@ -2161,7 +2159,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $corridor Selected route.
 	 * @return string|WP_Error Private file path or error.
 	 */
-	private function upload_booking_photo( $corridor ) {
+	public function upload_booking_photo( $corridor ) {
 		$file = isset( $_FILES['luggage_photo'] ) ? $_FILES['luggage_photo'] : null;
 		// The luggage photo is optional on every route: a missing file
 		// is not an error (hotel-collection guests are reminded in a
@@ -2242,7 +2240,7 @@ final class EasyLugg_Booking_Plugin {
 	/**
 	 * @return string
 	 */
-	private function private_photo_directory() {
+	public function private_photo_directory() {
 		$uploads = wp_upload_dir();
 		return trailingslashit( $uploads['basedir'] ) . 'easylugg-booking-private';
 	}
@@ -2251,7 +2249,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $directory Private image directory.
 	 * @return bool
 	 */
-	private function protect_private_photo_directory( $directory ) {
+	public function protect_private_photo_directory( $directory ) {
 		$rules = "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n";
 		$path  = trailingslashit( $directory ) . '.htaccess';
 		if ( ! file_exists( $path ) && false === file_put_contents( $path, $rules, LOCK_EX ) ) {
@@ -2268,7 +2266,7 @@ final class EasyLugg_Booking_Plugin {
 	/**
 	 * @return string
 	 */
-	private function generate_booking_code() {
+	public function generate_booking_code() {
 		$alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 		$random   = '';
 		for ( $index = 0; $index < 4; $index++ ) {
@@ -2338,7 +2336,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $corridor Corridor code.
 	 * @return string
 	 */
-	private function corridor_label( $corridor ) {
+	public function corridor_label( $corridor ) {
 		$labels = array(
 			'AH' => $this->text( 'summary.route_ah' ),
 			'HA' => $this->text( 'summary.route_ha' ),
@@ -2351,14 +2349,16 @@ final class EasyLugg_Booking_Plugin {
 	/**
 	 * @return array<string, string>
 	 */
-	private function status_labels() {
+	public function status_labels() {
 		return array(
 			'requested'  => $this->text( 'status.requested' ),
 			'confirmed'  => $this->text( 'status.confirmed' ),
 			'collected'  => $this->text( 'status.collected' ),
 			'in_transit' => $this->text( 'tracking.status_in_transit' ),
 			'delivered'  => $this->text( 'tracking.status_delivered' ),
+			'completed'  => $this->text( 'status.completed' ),
 			'cancelled'  => $this->text( 'status.cancelled' ),
+			'no_show'    => $this->text( 'status.no_show' ),
 		);
 	}
 
@@ -2366,7 +2366,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @param string $status Status key.
 	 * @return string
 	 */
-	private function status_label( $status ) {
+	public function status_label( $status ) {
 		$labels = $this->status_labels();
 		return isset( $labels[ $status ] ) ? $labels[ $status ] : $this->text( 'status.unknown' );
 	}

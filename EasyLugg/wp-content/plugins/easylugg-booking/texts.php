@@ -276,6 +276,7 @@ return array(
 		'created' => __( 'Created:', 'easylugg-booking' ),
 		'on_request' => __( 'Your booking is on request. Our team will check the destination and contact you before confirming.', 'easylugg-booking' ),
 		'cancelled' => __( 'This booking has been cancelled. Please contact EasyLugg if you need help.', 'easylugg-booking' ),
+		'no_show' => __( 'We could not complete this booking because the handover did not take place at the agreed time. Please contact EasyLugg to arrange a new booking.', 'easylugg-booking' ),
 		'changes_note' => __( 'For changes or cancellation, contact EasyLugg customer service. Bookings cannot be changed or cancelled online.', 'easylugg-booking' ),
 		'lookup_title' => __( 'Track your booking', 'easylugg-booking' ),
 		'lookup_subtitle' => __( 'Enter your booking code to see your booking details and status.', 'easylugg-booking' ),
@@ -363,7 +364,9 @@ return array(
 		'requested' => __( 'On request', 'easylugg-booking' ),
 		'confirmed' => __( 'Booking received (demo)', 'easylugg-booking' ),
 		'collected' => __( 'Collected', 'easylugg-booking' ),
+		'completed' => __( 'Completed', 'easylugg-booking' ),
 		'cancelled' => __( 'Cancelled', 'easylugg-booking' ),
+		'no_show' => __( 'No-show', 'easylugg-booking' ),
 		'unknown' => __( 'Unknown', 'easylugg-booking' ),
 	),
 );

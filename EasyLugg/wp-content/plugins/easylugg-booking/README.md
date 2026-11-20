@@ -206,3 +206,25 @@ node --check assets/booking.js
 For behavior changes, also test each route, a repeated submission, an
 on-request booking if the reception flow is enabled, photo upload/download,
 email failure handling, and tracking links on the local site.
+
+## Internal Dashboard
+
+Staff-only page at `/dashboard/` (shortcode `[easylugg_dashboard]`; create a WordPress
+page with that slug and shortcode — it is not auto-created). Spec: `EasyLugg-Dashboard-SRS-v1.0-DRAFT-en.md`
+(§11 lists what is built and what is not).
+
+| File | Responsibility |
+| --- | --- |
+| `includes/dashboard-rules.php` | State machine, gate checks and future-time rule as pure functions. Tests: `php tests/dashboard-rules-test.php` (no WordPress needed). |
+| `includes/dashboard-setup.php` | Roles and capabilities, audit log writer, login lockout, Staff kept out of wp-admin. |
+| `includes/dashboard.php` | Shortcode, access gate, list, detail, Settings screen. |
+| `includes/dashboard-forms.php` | Create/edit forms and per-status action forms (field names match the customer form so its validators are reused). |
+| `includes/dashboard-actions.php` | All write handlers (`wp_ajax_easylugg_dashboard_*`, never `nopriv`). |
+| `includes/dashboard-config.php` | Settings: option `easylugg_booking_ops_config` (prices stay in `easylugg_booking_prices`). |
+| `includes/dashboard-accounts.php` | wp-admin **Booking Plugin** page: create/lock Staff, per-account permissions. |
+| `includes/dashboard-texts.php` | Dashboard UI text. |
+
+Database version 2 adds columns to `wp_easylugg_bookings` (`source`, `created_by`, `invoice_no` unique,
+`needs_review`, `row_version`, `updated_at`) and the tables `wp_easylugg_audit_log` (append-only) and
+`wp_easylugg_booking_photos`. The upgrade is additive and runs automatically on the next page load.
+Booking status is changed **only** on the Dashboard; the old wp-admin booking and pricing pages are read-only.

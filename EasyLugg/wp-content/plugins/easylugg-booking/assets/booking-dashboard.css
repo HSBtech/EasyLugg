@@ -1,0 +1,232 @@
+/* EasyLugg Dashboard — scoped under .eld. Executive Transit (Stitch "Bookings
+   List (Light)", reference: docs/design-reference/stitch-bookings-list-light.html).
+   Flat surfaces, 1px borders, no shadows, no pills, no greens/ambers; status is
+   told apart by label and navy tints. Mobile-first: the booking table becomes
+   cards under 640px (SRS NFR-01). */
+.eld {
+	--eld-ink: #203344;
+	--eld-muted: #607181;
+	--eld-line: #d7e0e7;
+	--eld-bg: #ffffff;
+	--eld-card: #f3f7fa;
+	--eld-hover: #eaf0f5;
+	--eld-subtle: #f9fbfd;
+	--eld-accent: #124a70;
+	--eld-accent-hover: #0c3856;
+	--eld-accent-tint: rgba(18, 74, 112, .08);
+	--eld-accent-edge: rgba(18, 74, 112, .2);
+	--eld-red: #9c2f24;
+	--eld-red-tint: rgba(156, 47, 36, .06);
+	--eld-red-edge: #f0d5d2;
+	--eld-ring: 0 0 0 3px rgba(18, 74, 112, .12);
+	box-sizing: border-box;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 16px;
+	background: var(--eld-bg);
+	color: var(--eld-ink);
+	font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+	font-size: 16px;
+	line-height: 1.45;
+	-webkit-font-smoothing: antialiased;
+}
+.eld *, .eld *::before, .eld *::after { box-sizing: inherit; }
+.eld a:not([class]) { color: var(--eld-accent); text-decoration: none; }
+.eld a:not([class]):hover { text-decoration: underline; }
+/* Hello/Elementor theme resets: keep the dashboard font, links and tables. */
+.eld.eld.eld :is(a, h2, h3, h4, label, button, summary) { font-family: inherit; text-transform: none; }
+/* The theme styles form controls with very specific selectors; !important is scoped to .eld. */
+.eld :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):not([type="submit"]), select, textarea) {
+	font-family: inherit !important; text-transform: none !important; color: var(--eld-ink) !important;
+	border: 1px solid var(--eld-line) !important; border-radius: 8px !important; background-color: var(--eld-bg) !important;
+}
+.eld.eld :is(h2, h3, h4) { color: var(--eld-ink); }
+.eld .eld-nav a:hover, .eld .eld-btn:hover, .eld .eld-pager a:hover { text-decoration: none; }
+.eld input[type="checkbox"], .eld input[type="radio"] { accent-color: var(--eld-accent); }
+.eld input:focus, .eld select:focus, .eld textarea:focus {
+	outline: none; border-color: var(--eld-accent) !important; box-shadow: var(--eld-ring) !important;
+}
+.eld a:focus-visible, .eld button:focus-visible, .eld summary:focus-visible {
+	outline: 2px solid var(--eld-accent); outline-offset: 2px;
+}
+.eld-gate { max-width: 420px; }
+.eld-head-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+.eld .eld-head h2 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -.015em; }
+.eld .eld-head h2 a { text-decoration: none; color: inherit; }
+.eld-user { color: var(--eld-muted); font-size: .85rem; }
+.eld-nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.eld .eld-nav a {
+	padding: 6px 14px; min-height: 44px; display: inline-flex; align-items: center;
+	border: 1px solid var(--eld-line); border-radius: 8px; background: var(--eld-bg);
+	font-size: .8rem; font-weight: 600; letter-spacing: .03em;
+	text-decoration: none; color: var(--eld-muted);
+}
+.eld .eld-nav a:hover { background: var(--eld-hover); color: var(--eld-ink); }
+.eld .eld-nav a.is-active { background: var(--eld-accent); border-color: var(--eld-accent); color: #fff; }
+.eld .eld-nav a.eld-primary { border-color: var(--eld-accent); color: var(--eld-accent); }
+.eld .eld-nav a.eld-primary.is-active { color: #fff; }
+.eld-search { margin-bottom: 12px; }
+.eld .eld-search input {
+	width: 100%; max-width: 420px; padding: 0 16px; min-height: 48px;
+	border: 1px solid var(--eld-line); border-radius: 8px; background: var(--eld-bg);
+	color: var(--eld-ink); font: inherit; font-size: .9rem;
+}
+.eld-search input::placeholder, .eld-field input::placeholder, .eld-field textarea::placeholder { color: var(--eld-muted); }
+
+.eld-msg { padding: 10px 14px; border-radius: 8px; margin: 8px 0; border: 1px solid transparent; }
+.eld-msg.is-ok { background: var(--eld-accent-tint); border-color: var(--eld-accent-edge); color: var(--eld-accent); }
+.eld-msg.is-error { background: var(--eld-red-tint); border-color: var(--eld-red-edge); color: var(--eld-red); }
+
+/* Form cards (create, edit, settings): filled card, divider under the title. */
+.eld-card { background: var(--eld-card); border: 1px solid var(--eld-line); border-radius: 10px; padding: 24px; margin: 16px 0; }
+.eld .eld-card > h3, .eld .eld-card > h4 {
+	margin: 0 0 20px; padding-bottom: 16px; border-bottom: 1px solid var(--eld-line);
+	font-size: 1rem; font-weight: 600; color: var(--eld-ink);
+}
+.eld-card-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.eld .eld-card-head h3 {
+	display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0;
+	font-size: 1.75rem; line-height: 1.2; font-weight: 700; letter-spacing: -.02em; font-feature-settings: "tnum";
+}
+
+/* Booking detail: 7/5 two-column layout, white cards with a filled title band. */
+.eld-detail { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; margin: 16px 0; }
+.eld-col { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.eld-detail .eld-card { margin: 0; padding: 24px; background: var(--eld-bg); overflow: hidden; }
+.eld .eld-detail .eld-card > h4 {
+	margin: -24px -24px 24px; padding: 16px 24px; background: var(--eld-card);
+	border-bottom: 1px solid var(--eld-line); font-size: 1.125rem; font-weight: 600;
+}
+@media (min-width: 1024px) {
+	.eld-detail { grid-template-columns: 7fr 5fr; gap: 32px; }
+	.eld-col { gap: 32px; }
+}
+
+.eld .eld-btn {
+	box-shadow: none;
+	display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 8px 16px;
+	border: 1px solid var(--eld-line); border-radius: 8px; background: var(--eld-bg); color: var(--eld-accent);
+	font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.eld .eld-btn:hover { background: var(--eld-card); border-color: var(--eld-accent); }
+.eld .eld-btn.eld-primary { background: var(--eld-accent); border-color: var(--eld-accent); color: #fff; }
+.eld .eld-btn.eld-primary:hover { background: var(--eld-accent-hover); border-color: var(--eld-accent-hover); }
+.eld .eld-btn:disabled { background: var(--eld-card); border-color: var(--eld-line); color: var(--eld-muted); opacity: .7; cursor: wait; }
+
+/* Status chips: 6px radius, never a pill (Executive Transit). */
+.eld-pill {
+	display: inline-block; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--eld-line);
+	background: var(--eld-card); color: var(--eld-ink);
+	font-size: .7rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap;
+}
+.eld-pill.is-requested { color: var(--eld-muted); }
+.eld-pill.is-collected, .eld-pill.is-in_transit, .eld-pill.is-delivered {
+	background: var(--eld-accent-tint); border-color: var(--eld-accent-edge); color: var(--eld-accent);
+}
+.eld-pill.is-completed, .eld-pill.is-cancelled, .eld-pill.is-no_show { color: var(--eld-muted); }
+.eld-badge {
+	display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 6px;
+	font-size: .7rem; font-weight: 600; border: 1px solid transparent;
+}
+.eld-badge.is-red { background: var(--eld-red-tint); border-color: var(--eld-red-edge); color: var(--eld-red); }
+
+.eld-summary { color: var(--eld-muted); margin: 8px 0; font-size: .85rem; font-weight: 500; }
+.eld-filters {
+	display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin: 8px 0 12px;
+	padding: 16px; background: var(--eld-card); border: 1px solid var(--eld-line); border-radius: 10px;
+}
+.eld .eld-filters label { display: flex; flex-direction: column; font-size: .8rem; font-weight: 600; color: var(--eld-muted); gap: 4px; }
+.eld-filters input, .eld-filters select {
+	min-height: 48px; padding: 6px 12px; border: 1px solid var(--eld-line); border-radius: 8px;
+	background: var(--eld-bg); color: var(--eld-ink); font: inherit; font-size: .9rem;
+}
+
+.eld-table-wrap { overflow-x: auto; border: 1px solid var(--eld-line); border-radius: 10px; background: var(--eld-bg); }
+.eld .eld-table, .eld .eld-kv { width: 100%; border: 0; border-collapse: collapse; background: var(--eld-bg); font-feature-settings: "tnum"; }
+.eld .eld-table th, .eld .eld-table td { padding: 14px 12px; border: 0; border-bottom: 1px solid var(--eld-line); text-align: left; vertical-align: top; }
+.eld .eld-table tbody tr:last-child td { border-bottom: 0; }
+.eld .eld-table th {
+	padding: 12px; background: var(--eld-card); font-size: .75rem; font-weight: 600;
+	text-transform: uppercase; letter-spacing: .05em; color: var(--eld-muted);
+}
+.eld .eld-table tbody tr:nth-child(n) td { background: transparent; }
+.eld .eld-table tbody tr:hover:nth-child(n) td { background: var(--eld-subtle); }
+.eld .eld-table tbody tr.is-overdue:nth-child(n) td { background: #fdf2f1; border-bottom-color: var(--eld-red-edge); }
+.eld .eld-table tbody tr.is-overdue:hover:nth-child(n) td { background: #fae8e6; }
+.eld-pager { display: flex; gap: 12px; align-items: center; margin: 12px 0; font-size: .85rem; font-weight: 600; color: var(--eld-muted); }
+.eld .eld-pager a {
+	display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+	border: 1px solid var(--eld-line); border-radius: 8px; background: var(--eld-bg); text-decoration: none;
+}
+.eld .eld-pager a:hover { background: var(--eld-hover); }
+
+.eld .eld-kv th { width: 38%; text-align: left; font-size: .8rem; font-weight: 600; color: var(--eld-muted); padding: 10px 12px 10px 0; vertical-align: top; }
+.eld .eld-kv td { padding: 10px 0; }
+.eld .eld-kv th, .eld .eld-kv td { border: 0; border-bottom: 1px solid rgba(215, 224, 231, .5); }
+.eld .eld-kv tr:nth-child(n) th, .eld .eld-kv tr:nth-child(n) td { background: transparent; }
+.eld .eld-kv tr:last-child th, .eld .eld-kv tr:last-child td { border-bottom: 0; }
+.eld-photos { margin: 0; padding-left: 18px; }
+.eld-meta { color: var(--eld-muted); word-break: break-word; }
+
+/* Timeline: vertical navy line with a dot per event (Stitch milestone timeline). */
+.eld-timeline { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; }
+.eld-timeline::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 2px; background: var(--eld-line); }
+.eld-timeline li { position: relative; margin-bottom: 20px; font-feature-settings: "tnum"; }
+.eld-timeline li:last-child { margin-bottom: 0; }
+.eld-timeline li::before {
+	content: ""; position: absolute; left: -21px; top: 4px; width: 14px; height: 14px;
+	border-radius: 50%; background: var(--eld-accent); border: 2px solid var(--eld-bg);
+}
+.eld-history { list-style: none; margin: 0; padding: 0; font-feature-settings: "tnum"; }
+.eld-history li { padding: 10px 0; border-bottom: 1px solid var(--eld-line); }
+.eld-history li:last-child { border-bottom: 0; }
+
+.eld-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 12px; }
+.eld-grid[hidden] { display: none; }
+.eld .eld-field { display: flex; flex-direction: column; gap: 6px; font-size: .8rem; font-weight: 600; color: var(--eld-ink); }
+.eld-field input, .eld-field select, .eld-field textarea {
+	min-height: 48px; padding: 8px 12px; border: 1px solid var(--eld-line); border-radius: 8px;
+	background: var(--eld-bg); color: var(--eld-ink); font: inherit; font-weight: 400; width: 100%;
+}
+.eld-field textarea { min-height: 72px; }
+.eld-wide { grid-column: 1 / -1; }
+.eld-check { display: flex; gap: 10px; align-items: flex-start; min-height: 44px; }
+.eld-check input { width: 22px; height: 22px; margin-top: 2px; }
+.eld-sub { grid-column: 1 / -1; margin: 8px 0 0; font-weight: 600; }
+/* Operator actions: collapsible rows; cancel is the only destructive one. */
+.eld-act { border: 1px solid var(--eld-line); border-radius: 8px; margin: 12px 0; padding: 0; background: var(--eld-subtle); overflow: hidden; }
+.eld-act:first-of-type { margin-top: 0; }
+.eld-act summary {
+	display: flex; align-items: center; justify-content: space-between; gap: 12px; list-style: none;
+	cursor: pointer; padding: 12px 16px; min-height: 48px; font-weight: 600; color: var(--eld-ink);
+}
+.eld-act summary::-webkit-details-marker { display: none; }
+.eld-act summary:hover { background: var(--eld-card); }
+.eld-act summary::after {
+	content: ""; flex: none; width: 8px; height: 8px; margin-top: -3px;
+	border: solid var(--eld-muted); border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform .15s;
+}
+.eld-act[open] > summary { border-bottom: 1px solid var(--eld-line); }
+.eld-act[open] > summary::after { margin-top: 3px; transform: rotate(225deg); }
+.eld-act form { padding: 16px; }
+.eld-form { display: grid; gap: 16px; }
+.eld-form > .eld-btn { justify-self: start; }
+.eld-act.is-danger { border-color: var(--eld-red-edge); background: var(--eld-red-tint); }
+.eld-act.is-danger summary { color: var(--eld-red); }
+.eld-act.is-danger summary:hover { background: rgba(156, 47, 36, .1); }
+.eld-act.is-danger[open] > summary { border-bottom-color: var(--eld-red-edge); }
+.eld-act.is-danger .eld-btn { background: var(--eld-red); border-color: var(--eld-red); color: #fff; }
+.eld-act.is-danger .eld-btn:hover { background: #7f251c; border-color: #7f251c; }
+
+@media (max-width: 640px) {
+	.eld { padding: 12px; }
+	.eld-table-wrap { border: 0; border-radius: 0; background: transparent; }
+	.eld-table thead { display: none; }
+	.eld-table, .eld-table tbody, .eld-table tr, .eld-table td { display: block; width: 100%; }
+	.eld-table tr { border: 1px solid var(--eld-line); border-radius: 10px; margin-bottom: 10px; padding: 6px 10px; background: var(--eld-bg); }
+	.eld .eld-table td, .eld .eld-table tbody tr.is-overdue:nth-child(n) td, .eld .eld-table tbody tr:hover:nth-child(n) td { border: 0; padding: 4px 0; background: transparent; }
+	.eld-table tr.is-overdue { background: #fdf2f1; border-color: var(--eld-red-edge); }
+	.eld-table td::before { content: attr(data-label) ": "; font-weight: 600; color: var(--eld-muted); }
+	.eld-kv th { width: 45%; }
+	.eld-btn { width: 100%; }
+}
