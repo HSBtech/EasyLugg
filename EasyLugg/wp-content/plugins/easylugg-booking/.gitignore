@@ -5,3 +5,6 @@ EasyLugg-Booking-standalone.html
 EasyLugg-Booking-Texts.md
 backup.log
 stitch-design/
+
+# Changelog is part of the plugin source (shipped in the repo).
+!CHANGELOG.md
