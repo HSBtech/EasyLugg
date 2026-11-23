@@ -104,8 +104,7 @@ final class EasyLugg_Dashboard {
 		}
 		$css = plugin_dir_path( dirname( __FILE__ ) ) . 'assets/booking-dashboard.css';
 		$js  = plugin_dir_path( dirname( __FILE__ ) ) . 'assets/booking-dashboard.js';
-		wp_enqueue_style( 'easylugg-dashboard-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', array(), null );
-		wp_enqueue_style( 'easylugg-dashboard', plugins_url( 'assets/booking-dashboard.css', dirname( __FILE__ ) ), array( 'easylugg-dashboard-font' ),EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $css ) );
+		wp_enqueue_style( 'easylugg-dashboard', plugins_url( 'assets/booking-dashboard.css', dirname( __FILE__ ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $css ) );
 		wp_enqueue_script( 'easylugg-dashboard', plugins_url( 'assets/booking-dashboard.js', dirname( __FILE__ ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $js ), true );
 		wp_localize_script(
 			'easylugg-dashboard',

@@ -3,7 +3,7 @@
  * Dashboard business rules — pure functions, no WordPress calls.
  *
  * Everything here takes plain data in and returns plain data out so it can be
- * unit-tested from the CLI (tests/dashboard-rules-test.php) without WordPress.
+ * unit-tested from the CLI (dev copy kept outside the plugin: plugin-dev/easylugg-booking/tests/dashboard-rules-test.php) without WordPress.
  * SRS refs: OPS-01..03, OPS-05, OPS-06, OPS-07, EDT-01, TIME-01..08.
  */
 

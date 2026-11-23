@@ -25,7 +25,7 @@
 	padding: 16px;
 	background: var(--eld-bg);
 	color: var(--eld-ink);
-	font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+	font-family: inherit;
 	font-size: 16px;
 	line-height: 1.45;
 	-webkit-font-smoothing: antialiased;
