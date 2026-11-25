@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 2026-11-25 — WPML readiness (language handling)
+### Added
+- `wpml-config.xml` (translatable hub texts) and `languages/easylugg-booking.pot`; `Domain Path` in the plugin header.
+- Bookings table column `lang` (`DB_VERSION` 3). The `dbDelta` upgrade runs on the first request after the plugin is updated. It stores the WPML language of each new booking.
+- `EasyLugg_Booking_Plugin::current_lang()`, `tracking_page_url()`, `with_language()` helpers.
+
+### Changed
+- AJAX URL carries `?lang=`, so validation errors and lookup results follow the page language.
+- Tracking links (confirmation email, Dashboard) point to the translated "bookings" page; translated pages also load the booking assets.
+- Dashboard "resend confirmation" email is sent in the booking's language.
+- Hub name, address and hours (Dashboard → Settings) are registered with WPML String Translation.
+- Hardcoded ` VND` and the Dashboard `aria-label` are now translatable; `texts.php` placeholders `bag_price` (new) and `bags_days` use numbered placeholders.
+- `texts()` is cached per language, not once per request.
+
 ### 2026-11-24 — Dashboard font and dev-file cleanup (commit e8e891a)
 ### Changed
 - **Staff Dashboard (`[easylugg_dashboard]`):** Now inherits the active WordPress theme / Elementor font instead of forcing Plus Jakarta Sans.

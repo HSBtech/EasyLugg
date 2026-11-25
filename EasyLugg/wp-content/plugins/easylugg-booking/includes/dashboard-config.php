@@ -240,6 +240,10 @@ final class EasyLugg_Dashboard_Config {
 				$changed++;
 			}
 			$next[ $key ] = $value;
+			// WPML String Translation: make the customer-visible hub strings translatable.
+			if ( in_array( $key, array( 'hub_name', 'hub_address', 'hub_hours' ), true ) && '' !== $value ) {
+				do_action( 'wpml_register_single_string', 'easylugg-booking', $key, $value );
+			}
 		}
 		update_option( self::OPTION, $next );
 		return $changed;
@@ -271,7 +275,8 @@ final class EasyLugg_Dashboard_Config {
 		$cfg = self::get();
 		foreach ( array( 'hub_name', 'hub_address', 'hub_hours' ) as $key ) {
 			if ( '' !== $cfg[ $key ] && isset( $texts['storage'] ) ) {
-				$texts['storage'][ $key ] = $cfg[ $key ];
+				// No-op without WPML; returns the translation for the current language with it.
+				$texts['storage'][ $key ] = apply_filters( 'wpml_translate_single_string', $cfg[ $key ], 'easylugg-booking', $key );
 			}
 		}
 		return $texts;

@@ -1,0 +1,10 @@
+<wpml-config>
+	<!-- Customer-visible hub strings edited in Dashboard > Settings. Prices and slots are not translatable. -->
+	<admin-texts>
+		<key name="easylugg_booking_ops_config">
+			<key name="hub_name"/>
+			<key name="hub_address"/>
+			<key name="hub_hours"/>
+		</key>
+	</admin-texts>
+</wpml-config>

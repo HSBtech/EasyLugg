@@ -87,6 +87,8 @@ return array(
 		'bag_oversize_name' => __( 'Oversize / Sports (>23 kg)', 'easylugg-booking' ),
 		'bag_oversize_desc' => __( 'Golf bags, surfboards, large boxes', 'easylugg-booking' ),
 		'bag_unit' => __( 'bag', 'easylugg-booking' ),
+		/* translators: 1: price in VND (number), 2: bag unit word, e.g. "bag". */
+		'bag_price' => __( '%1$s VND / %2$s', 'easylugg-booking' ),
 		'bag_decrease' => __( 'Decrease %s bags', 'easylugg-booking' ),
 		'bag_increase' => __( 'Increase %s bags', 'easylugg-booking' ),
 		'promo_label' => __( 'Promotion code (optional)', 'easylugg-booking' ),
@@ -131,7 +133,8 @@ return array(
 		'price_hint_empty' => __( 'Add bags and pick your dates to see the price.', 'easylugg-booking' ),
 		'policy_title' => __( 'Operating Hours & Daily Billing Policy', 'easylugg-booking' ),
 		'policy_text' => __( 'Drop-off and pick-up available strictly between 08:00 and 20:00 daily. Rates are billed per bag, per calendar day (or part thereof).', 'easylugg-booking' ),
-		'bags_days' => __( '%d bags × %d days', 'easylugg-booking' ),
+		/* translators: 1: number of bags, 2: number of days. */
+		'bags_days' => __( '%1$d bags × %2$d days', 'easylugg-booking' ),
 	),
 	'hotel' => array(
 		'name' => __( 'Hotel name', 'easylugg-booking' ),

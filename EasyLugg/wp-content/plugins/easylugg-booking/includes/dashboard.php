@@ -232,13 +232,12 @@ final class EasyLugg_Dashboard {
 	 */
 	public static function tracking_url( $row ) {
 		$token = hash_hmac( 'sha256', $row->request_key, wp_salt( 'secure_auth' ) );
-		$page  = get_page_by_path( 'bookings' );
 		return add_query_arg(
 			array(
 				'el_track' => $row->booking_code,
 				'el_token' => $token,
 			),
-			$page ? get_permalink( $page ) : home_url( '/bookings/' )
+			EasyLugg_Booking_Plugin::tracking_page_url()
 		);
 	}
 
@@ -330,7 +329,7 @@ final class EasyLugg_Dashboard {
 				<h2><a href="<?php echo esc_url( self::url() ); ?>"><?php echo esc_html( self::t( 'nav.title' ) ); ?></a></h2>
 				<span class="eld-user"><?php echo esc_html( wp_get_current_user()->display_name ); ?> · <a href="<?php echo esc_url( wp_logout_url( self::url() ) ); ?>"><?php echo esc_html( self::t( 'nav.logout' ) ); ?></a></span>
 			</div>
-			<nav class="eld-nav" aria-label="Dashboard">
+			<nav class="eld-nav" aria-label="<?php echo esc_attr( self::t( 'nav.aria' ) ); ?>">
 				<?php foreach ( array( 'open', 'close', 'day', 'held' ) as $mode ) : ?>
 					<a class="<?php echo ( '' === $tab && $w === $mode && '' === $q ) ? 'is-active' : ''; ?>" href="<?php echo esc_url( self::url( array( 'mode' => $mode ) ) ); ?>"><?php echo esc_html( self::t( 'nav.' . $mode ) ); ?></a>
 				<?php endforeach; ?>

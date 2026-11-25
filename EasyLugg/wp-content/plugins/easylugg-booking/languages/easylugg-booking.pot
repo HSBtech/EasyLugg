@@ -1,0 +1,2523 @@
+# Copyright (C) 2026 EasyLugg
+# This file is distributed under the same license as the EasyLugg Delivery Booking plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: EasyLugg Delivery Booking 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easylugg-booking\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-25T15:50:31+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: easylugg-booking\n"
+
+#. Plugin Name of the plugin
+#: easylugg-booking.php
+msgid "EasyLugg Delivery Booking"
+msgstr ""
+
+#. Description of the plugin
+#: easylugg-booking.php
+msgid "Adds a configurable, multi-step luggage delivery booking flow."
+msgstr ""
+
+#. Author of the plugin
+#: easylugg-booking.php
+msgid "EasyLugg"
+msgstr ""
+
+#: easylugg-booking.php:396
+msgid "Pricing must include a whole-number amount for every price."
+msgstr ""
+
+#: easylugg-booking.php:410
+msgid "Enter a whole-number price of 0 or more for every price."
+msgstr ""
+
+#: easylugg-booking.php:442
+#: easylugg-booking.php:443
+msgid "EasyLugg Bookings"
+msgstr ""
+
+#: easylugg-booking.php:452
+#: easylugg-booking.php:453
+msgid "Luggage Pricing"
+msgstr ""
+
+#: easylugg-booking.php:471
+msgid "EasyLugg luggage pricing"
+msgstr ""
+
+#: easylugg-booking.php:477
+#: includes/dashboard-texts.php:203
+msgid "Cabin bag (VND per bag)"
+msgstr ""
+
+#: easylugg-booking.php:478
+#: includes/dashboard-texts.php:204
+msgid "Medium bag (VND per bag)"
+msgstr ""
+
+#: easylugg-booking.php:479
+#: includes/dashboard-texts.php:205
+msgid "Oversize bag (VND per bag)"
+msgstr ""
+
+#: easylugg-booking.php:480
+#: includes/dashboard-texts.php:206
+msgid "Overnight storage (VND per bag per night)"
+msgstr ""
+
+#: easylugg-booking.php:505
+msgid "Old page, for reference only."
+msgstr ""
+
+#: easylugg-booking.php:508
+msgid "Prices are now edited on the Dashboard under Settings → Pricing. Nothing can be saved here."
+msgstr ""
+
+#: easylugg-booking.php:509
+msgid "Booking status is now changed on the Dashboard, where every step is checked and logged. Nothing can be changed here."
+msgstr ""
+
+#: easylugg-booking.php:511
+msgid "Open the Dashboard"
+msgstr ""
+
+#: easylugg-booking.php:541
+msgid "EasyLugg delivery bookings"
+msgstr ""
+
+#: easylugg-booking.php:543
+msgid "Customer details are visible only to site administrators."
+msgstr ""
+
+#: easylugg-booking.php:547
+#: includes/dashboard-texts.php:32
+msgid "Booking"
+msgstr ""
+
+#: easylugg-booking.php:548
+#: includes/dashboard-texts.php:33
+msgid "Customer"
+msgstr ""
+
+#: easylugg-booking.php:549
+#: easylugg-booking.php:593
+#: includes/dashboard-texts.php:34
+#: includes/dashboard-texts.php:148
+#: texts.php:242
+msgid "Route"
+msgstr ""
+
+#: easylugg-booking.php:550
+#: easylugg-booking.php:594
+#: includes/dashboard-texts.php:46
+#: includes/dashboard-texts.php:153
+#: texts.php:58
+#: texts.php:259
+msgid "Service date"
+msgstr ""
+
+#: easylugg-booking.php:551
+#: includes/dashboard-accounts.php:272
+#: includes/dashboard-texts.php:38
+msgid "Status"
+msgstr ""
+
+#: easylugg-booking.php:552
+msgid "Estimate"
+msgstr ""
+
+#: easylugg-booking.php:557
+msgid "No bookings yet."
+msgstr ""
+
+#: easylugg-booking.php:595
+msgid "Storage hub"
+msgstr ""
+
+#: easylugg-booking.php:596
+#: includes/dashboard-texts.php:167
+#: texts.php:119
+msgid "Drop-off date"
+msgstr ""
+
+#: easylugg-booking.php:597
+#: includes/dashboard-texts.php:168
+#: texts.php:121
+msgid "Drop-off time"
+msgstr ""
+
+#: easylugg-booking.php:598
+#: includes/dashboard-texts.php:169
+#: texts.php:124
+msgid "Pick-up date"
+msgstr ""
+
+#: easylugg-booking.php:599
+#: includes/dashboard-texts.php:170
+#: texts.php:126
+msgid "Pick-up time"
+msgstr ""
+
+#: easylugg-booking.php:599
+#: includes/dashboard-texts.php:156
+#: texts.php:60
+msgid "Airport pickup time"
+msgstr ""
+
+#: easylugg-booking.php:600
+msgid "Storage days"
+msgstr ""
+
+#: easylugg-booking.php:601
+#: includes/dashboard-texts.php:157
+#: texts.php:67
+msgid "Airport delivery time"
+msgstr ""
+
+#: easylugg-booking.php:602
+msgid "Flight departure time"
+msgstr ""
+
+#: easylugg-booking.php:603
+#: includes/dashboard-texts.php:155
+#: texts.php:63
+msgid "Flight number"
+msgstr ""
+
+#: easylugg-booking.php:604
+#: texts.php:78
+msgid "Hotel delivery"
+msgstr ""
+
+#: easylugg-booking.php:605
+#: includes/dashboard-texts.php:154
+#: texts.php:70
+msgid "Delivery date"
+msgstr ""
+
+#: easylugg-booking.php:606
+msgid "Storage fee"
+msgstr ""
+
+#: easylugg-booking.php:607
+#: includes/dashboard-texts.php:158
+msgid "Departure hotel"
+msgstr ""
+
+#: easylugg-booking.php:608
+#: includes/dashboard-texts.php:159
+msgid "Destination hotel"
+msgstr ""
+
+#: easylugg-booking.php:609
+msgid "Departure hotel booking code"
+msgstr ""
+
+#: easylugg-booking.php:610
+msgid "Destination hotel booking code"
+msgstr ""
+
+#: easylugg-booking.php:611
+msgid "Luggage counts"
+msgstr ""
+
+#: easylugg-booking.php:612
+#: includes/dashboard-texts.php:181
+#: texts.php:225
+msgid "Promotion code"
+msgstr ""
+
+#: easylugg-booking.php:613
+#: includes/dashboard-texts.php:182
+msgid "Customer note"
+msgstr ""
+
+#: easylugg-booking.php:614
+msgid "Contact details"
+msgstr ""
+
+#: easylugg-booking.php:615
+msgid "Demo payment method"
+msgstr ""
+
+#: easylugg-booking.php:616
+#: texts.php:247
+msgid "Estimated price"
+msgstr ""
+
+#: easylugg-booking.php:617
+msgid "Terms accepted at"
+msgstr ""
+
+#: easylugg-booking.php:627
+#: texts.php:272
+msgid "Booking not found"
+msgstr ""
+
+#: easylugg-booking.php:637
+msgid "All bookings"
+msgstr ""
+
+#: easylugg-booking.php:638
+msgid "Status:"
+msgstr ""
+
+#: easylugg-booking.php:652
+#: texts.php:98
+msgid "Luggage photo"
+msgstr ""
+
+#: easylugg-booking.php:653
+msgid "Download photo"
+msgstr ""
+
+#: easylugg-booking.php:703
+msgid "Booking status is changed on the Dashboard."
+msgstr ""
+
+#: easylugg-booking.php:711
+msgid "You are not allowed to access booking photos."
+msgstr ""
+
+#: easylugg-booking.php:726
+msgid "The booking photo could not be found."
+msgstr ""
+
+#: easylugg-booking.php:731
+msgid "The stored booking photo is not a supported image."
+msgstr ""
+
+#: easylugg-booking.php:1293
+msgid "Clear"
+msgstr ""
+
+#: includes/dashboard-accounts.php:24
+msgid "Create bookings"
+msgstr ""
+
+#: includes/dashboard-accounts.php:25
+msgid "Edit bookings"
+msgstr ""
+
+#: includes/dashboard-accounts.php:26
+msgid "Operate (status, photos, payments)"
+msgstr ""
+
+#: includes/dashboard-accounts.php:27
+msgid "Cancel / no-show"
+msgstr ""
+
+#: includes/dashboard-accounts.php:28
+msgid "Cancel paid orders"
+msgstr ""
+
+#: includes/dashboard-accounts.php:29
+#: includes/dashboard-texts.php:114
+msgid "Clear review flag"
+msgstr ""
+
+#: includes/dashboard-accounts.php:60
+#: includes/dashboard-accounts.php:61
+msgid "Booking Plugin"
+msgstr ""
+
+#: includes/dashboard-accounts.php:76
+msgid "You are not allowed to manage EasyLugg accounts."
+msgstr ""
+
+#: includes/dashboard-accounts.php:154
+msgid "Set your EasyLugg staff password"
+msgstr ""
+
+#. translators: 1: dashboard URL, 2: set-password link
+#: includes/dashboard-accounts.php:157
+#, php-format
+msgid ""
+"Hello,\n"
+"\n"
+"An EasyLugg staff account was created for you.\n"
+"Set your password here: %2$s\n"
+"\n"
+"Then sign in at: %1$s\n"
+""
+msgstr ""
+
+#: includes/dashboard-accounts.php:228
+msgid "Account created. A set-password link was emailed to the person."
+msgstr ""
+
+#: includes/dashboard-accounts.php:229
+msgid "A new set-password link was emailed."
+msgstr ""
+
+#: includes/dashboard-accounts.php:230
+msgid "Account locked and signed out."
+msgstr ""
+
+#: includes/dashboard-accounts.php:231
+msgid "Account unlocked."
+msgstr ""
+
+#: includes/dashboard-accounts.php:232
+msgid "Permissions saved."
+msgstr ""
+
+#: includes/dashboard-accounts.php:233
+msgid "An account with that email already exists."
+msgstr ""
+
+#: includes/dashboard-accounts.php:234
+msgid "Please check the name and email."
+msgstr ""
+
+#: includes/dashboard-accounts.php:235
+msgid "The account could not be created."
+msgstr ""
+
+#: includes/dashboard-accounts.php:245
+msgid "Booking Plugin — Staff accounts"
+msgstr ""
+
+#: includes/dashboard-accounts.php:246
+msgid "Staff sign in on the Dashboard page. Administrators are managed in Users. Each person gets their own account; do not share logins."
+msgstr ""
+
+#: includes/dashboard-accounts.php:252
+msgid "If the email does not arrive, give this one-time link to the person (shown only once):"
+msgstr ""
+
+#: includes/dashboard-accounts.php:257
+msgid "Add a staff account"
+msgstr ""
+
+#: includes/dashboard-accounts.php:262
+#: includes/dashboard-accounts.php:271
+#: texts.php:228
+msgid "Name"
+msgstr ""
+
+#: includes/dashboard-accounts.php:263
+#: texts.php:151
+#: texts.php:229
+msgid "Email"
+msgstr ""
+
+#: includes/dashboard-accounts.php:265
+msgid "Create account and email set-password link"
+msgstr ""
+
+#: includes/dashboard-accounts.php:268
+msgid "Staff accounts"
+msgstr ""
+
+#: includes/dashboard-accounts.php:273
+msgid "Last sign-in"
+msgstr ""
+
+#: includes/dashboard-accounts.php:274
+msgid "Permissions"
+msgstr ""
+
+#: includes/dashboard-accounts.php:275
+#: includes/dashboard-texts.php:79
+msgid "Actions"
+msgstr ""
+
+#: includes/dashboard-accounts.php:279
+msgid "No staff accounts yet."
+msgstr ""
+
+#: includes/dashboard-accounts.php:288
+msgid "Locked"
+msgstr ""
+
+#: includes/dashboard-accounts.php:288
+msgid "Active"
+msgstr ""
+
+#: includes/dashboard-accounts.php:298
+#: includes/dashboard-texts.php:108
+msgid "Save"
+msgstr ""
+
+#: includes/dashboard-accounts.php:302
+msgid "Unlock"
+msgstr ""
+
+#: includes/dashboard-accounts.php:302
+msgid "Lock"
+msgstr ""
+
+#: includes/dashboard-accounts.php:302
+msgid "Send set-password link"
+msgstr ""
+
+#: includes/dashboard-setup.php:131
+msgid "EasyLugg Staff"
+msgstr ""
+
+#: includes/dashboard-setup.php:134
+msgid "EasyLugg Admin"
+msgstr ""
+
+#: includes/dashboard-setup.php:262
+msgid "Too many failed sign-in attempts. Please wait 15 minutes and try again."
+msgstr ""
+
+#: includes/dashboard-setup.php:303
+#: includes/dashboard-texts.php:27
+msgid "This account is locked. Please contact your administrator."
+msgstr ""
+
+#: includes/dashboard-texts.php:11
+msgid "EasyLugg Dashboard"
+msgstr ""
+
+#: includes/dashboard-texts.php:12
+msgid "Dashboard"
+msgstr ""
+
+#: includes/dashboard-texts.php:13
+msgid "Open work"
+msgstr ""
+
+#: includes/dashboard-texts.php:14
+msgid "Awaiting close-out"
+msgstr ""
+
+#: includes/dashboard-texts.php:15
+msgid "By date"
+msgstr ""
+
+#: includes/dashboard-texts.php:16
+#: includes/dashboard-texts.php:51
+#: includes/dashboard-texts.php:280
+msgid "Luggage held"
+msgstr ""
+
+#: includes/dashboard-texts.php:17
+msgid "+ Create new booking"
+msgstr ""
+
+#: includes/dashboard-texts.php:18
+#: includes/dashboard-texts.php:198
+msgid "Settings"
+msgstr ""
+
+#: includes/dashboard-texts.php:19
+msgid "Log out"
+msgstr ""
+
+#: includes/dashboard-texts.php:20
+msgid "Search code, name or email"
+msgstr ""
+
+#: includes/dashboard-texts.php:21
+msgid "← Back to list"
+msgstr ""
+
+#: includes/dashboard-texts.php:24
+msgid "Staff only"
+msgstr ""
+
+#: includes/dashboard-texts.php:25
+msgid "Sign in with your EasyLugg staff account."
+msgstr ""
+
+#: includes/dashboard-texts.php:26
+msgid "You do not have permission to open the Dashboard."
+msgstr ""
+
+#: includes/dashboard-texts.php:28
+msgid "You are not allowed to do that."
+msgstr ""
+
+#: includes/dashboard-texts.php:29
+msgid "Your session has expired. Please reload the page and try again."
+msgstr ""
+
+#: includes/dashboard-texts.php:35
+msgid "Date / time"
+msgstr ""
+
+#: includes/dashboard-texts.php:36
+#: texts.php:204
+msgid "Bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:37
+#: includes/dashboard-texts.php:81
+msgid "Total"
+msgstr ""
+
+#: includes/dashboard-texts.php:39
+msgid "Next step"
+msgstr ""
+
+#: includes/dashboard-texts.php:40
+msgid "No bookings match."
+msgstr ""
+
+#: includes/dashboard-texts.php:41
+#, php-format
+msgid "%1$d bookings · %2$d bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:42
+msgid "Overdue"
+msgstr ""
+
+#: includes/dashboard-texts.php:43
+msgid "Needs review"
+msgstr ""
+
+#: includes/dashboard-texts.php:44
+msgid "Filter"
+msgstr ""
+
+#: includes/dashboard-texts.php:45
+msgid "All"
+msgstr ""
+
+#: includes/dashboard-texts.php:47
+#: includes/dashboard-texts.php:85
+#: includes/dashboard-texts.php:183
+msgid "Source"
+msgstr ""
+
+#: includes/dashboard-texts.php:48
+msgid "← Previous"
+msgstr ""
+
+#: includes/dashboard-texts.php:49
+msgid "Next →"
+msgstr ""
+
+#: includes/dashboard-texts.php:50
+#, php-format
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#: includes/dashboard-texts.php:52
+msgid "Open"
+msgstr ""
+
+#: includes/dashboard-texts.php:53
+msgid "Cabin"
+msgstr ""
+
+#: includes/dashboard-texts.php:54
+msgid "Medium"
+msgstr ""
+
+#: includes/dashboard-texts.php:55
+msgid "Oversize"
+msgstr ""
+
+#: includes/dashboard-texts.php:56
+msgid "Storage"
+msgstr ""
+
+#: includes/dashboard-texts.php:59
+msgid "Customer web"
+msgstr ""
+
+#: includes/dashboard-texts.php:60
+msgid "Internal"
+msgstr ""
+
+#: includes/dashboard-texts.php:61
+msgid "Walk-in"
+msgstr ""
+
+#: includes/dashboard-texts.php:62
+msgid "OTA"
+msgstr ""
+
+#: includes/dashboard-texts.php:63
+msgid "Phone"
+msgstr ""
+
+#: includes/dashboard-texts.php:66
+msgid "Cash"
+msgstr ""
+
+#: includes/dashboard-texts.php:67
+msgid "Bank transfer"
+msgstr ""
+
+#: includes/dashboard-texts.php:68
+msgid "Already paid on OTA"
+msgstr ""
+
+#: includes/dashboard-texts.php:69
+msgid "Not paid yet"
+msgstr ""
+
+#: includes/dashboard-texts.php:70
+msgid "Paid"
+msgstr ""
+
+#: includes/dashboard-texts.php:71
+msgid "Customer web (demo payment)"
+msgstr ""
+
+#: includes/dashboard-texts.php:74
+msgid "Order"
+msgstr ""
+
+#: includes/dashboard-texts.php:75
+msgid "Customer and contact"
+msgstr ""
+
+#: includes/dashboard-texts.php:76
+msgid "Money"
+msgstr ""
+
+#: includes/dashboard-texts.php:77
+msgid "Photos"
+msgstr ""
+
+#: includes/dashboard-texts.php:78
+msgid "History"
+msgstr ""
+
+#: includes/dashboard-texts.php:80
+msgid "This booking is closed. It can only be viewed, and notes can be added."
+msgstr ""
+
+#: includes/dashboard-texts.php:82
+#: includes/dashboard-texts.php:184
+msgid "Payment method"
+msgstr ""
+
+#: includes/dashboard-texts.php:83
+msgid "Payment status"
+msgstr ""
+
+#: includes/dashboard-texts.php:84
+#: includes/dashboard-texts.php:135
+msgid "Invoice number"
+msgstr ""
+
+#: includes/dashboard-texts.php:86
+#: includes/dashboard-texts.php:185
+msgid "OTA booking code"
+msgstr ""
+
+#: includes/dashboard-texts.php:87
+msgid "Created"
+msgstr ""
+
+#: includes/dashboard-texts.php:88
+msgid "Customer luggage photo"
+msgstr ""
+
+#: includes/dashboard-texts.php:89
+msgid "Check-in"
+msgstr ""
+
+#: includes/dashboard-texts.php:90
+msgid "Handover"
+msgstr ""
+
+#: includes/dashboard-texts.php:91
+msgid "Download"
+msgstr ""
+
+#: includes/dashboard-texts.php:92
+msgid "No photos yet."
+msgstr ""
+
+#: includes/dashboard-texts.php:93
+#: includes/dashboard-texts.php:249
+msgid "Booking not found."
+msgstr ""
+
+#: includes/dashboard-texts.php:94
+#: includes/dashboard-texts.php:147
+msgid "Edit booking"
+msgstr ""
+
+#: includes/dashboard-texts.php:95
+msgid "Customer tracking link"
+msgstr ""
+
+#: includes/dashboard-texts.php:96
+msgid "by"
+msgstr ""
+
+#: includes/dashboard-texts.php:97
+msgid "System"
+msgstr ""
+
+#: includes/dashboard-texts.php:98
+msgid "Flagged for Ops review"
+msgstr ""
+
+#: includes/dashboard-texts.php:101
+msgid "Confirm order"
+msgstr ""
+
+#: includes/dashboard-texts.php:102
+msgid "Check-in / Collected"
+msgstr ""
+
+#: includes/dashboard-texts.php:103
+msgid "On the van / In transit"
+msgstr ""
+
+#: includes/dashboard-texts.php:104
+#: texts.php:277
+msgid "Delivered"
+msgstr ""
+
+#: includes/dashboard-texts.php:105
+msgid "Complete order"
+msgstr ""
+
+#: includes/dashboard-texts.php:106
+msgid "Cancel order"
+msgstr ""
+
+#: includes/dashboard-texts.php:107
+msgid "Record no-show"
+msgstr ""
+
+#: includes/dashboard-texts.php:109
+msgid "Are you sure? This cannot be undone."
+msgstr ""
+
+#: includes/dashboard-texts.php:110
+msgid "Record payment received"
+msgstr ""
+
+#: includes/dashboard-texts.php:111
+msgid "Add a note"
+msgstr ""
+
+#: includes/dashboard-texts.php:112
+msgid "Report an incident"
+msgstr ""
+
+#: includes/dashboard-texts.php:113
+msgid "Mark luggage released"
+msgstr ""
+
+#: includes/dashboard-texts.php:115
+msgid "Save invoice number"
+msgstr ""
+
+#: includes/dashboard-texts.php:118
+msgid "The hotel has confirmed it will hold the luggage"
+msgstr ""
+
+#: includes/dashboard-texts.php:119
+msgid "I checked the booking code and the name"
+msgstr ""
+
+#: includes/dashboard-texts.php:120
+msgid "EasyLugg tag code"
+msgstr ""
+
+#: includes/dashboard-texts.php:121
+msgid "Bags actually received"
+msgstr ""
+
+#: includes/dashboard-texts.php:122
+#, php-format
+msgid "Booked: %d"
+msgstr ""
+
+#: includes/dashboard-texts.php:123
+msgid "Reason"
+msgstr ""
+
+#: includes/dashboard-texts.php:124
+msgid "Check-in photos (at least 2)"
+msgstr ""
+
+#: includes/dashboard-texts.php:125
+msgid "Handover photo (at least 1)"
+msgstr ""
+
+#: includes/dashboard-texts.php:126
+msgid "Van loop"
+msgstr ""
+
+#: includes/dashboard-texts.php:127
+msgid "Loop 1"
+msgstr ""
+
+#: includes/dashboard-texts.php:128
+msgid "Loop 2"
+msgstr ""
+
+#: includes/dashboard-texts.php:129
+msgid "Received by"
+msgstr ""
+
+#: includes/dashboard-texts.php:130
+msgid "The customer"
+msgstr ""
+
+#: includes/dashboard-texts.php:131
+msgid "Hotel reception"
+msgstr ""
+
+#: includes/dashboard-texts.php:132
+msgid "Someone on the customer’s behalf"
+msgstr ""
+
+#: includes/dashboard-texts.php:133
+msgid "Receiver name"
+msgstr ""
+
+#: includes/dashboard-texts.php:134
+msgid "Proxy pickup was registered in advance and ID was shown"
+msgstr ""
+
+#: includes/dashboard-texts.php:136
+msgid "Amount received (VND)"
+msgstr ""
+
+#: includes/dashboard-texts.php:137
+msgid "Method"
+msgstr ""
+
+#: includes/dashboard-texts.php:138
+msgid "Reason for cancelling"
+msgstr ""
+
+#: includes/dashboard-texts.php:139
+msgid "Free cancellation applies before 24 hours; refunds take 7–10 days. Refunds are handled separately."
+msgstr ""
+
+#: includes/dashboard-texts.php:140
+msgid "How long did staff wait, which channel was used to reach the customer, and where is the luggage?"
+msgstr ""
+
+#: includes/dashboard-texts.php:141
+msgid "Luggage is being held by EasyLugg"
+msgstr ""
+
+#: includes/dashboard-texts.php:142
+#: includes/dashboard-texts.php:278
+#: texts.php:226
+msgid "Note"
+msgstr ""
+
+#: includes/dashboard-texts.php:143
+msgid "Incident"
+msgstr ""
+
+#: includes/dashboard-texts.php:146
+msgid "Create a booking"
+msgstr ""
+
+#: includes/dashboard-texts.php:149
+msgid "Airport → Hotel (AH)"
+msgstr ""
+
+#: includes/dashboard-texts.php:150
+msgid "Hotel → Airport (HA)"
+msgstr ""
+
+#: includes/dashboard-texts.php:151
+msgid "Hotel → Hotel (HH)"
+msgstr ""
+
+#: includes/dashboard-texts.php:152
+msgid "Storage (ST)"
+msgstr ""
+
+#: includes/dashboard-texts.php:160
+#: texts.php:140
+msgid "Hotel name"
+msgstr ""
+
+#: includes/dashboard-texts.php:161
+msgid "Hotel address"
+msgstr ""
+
+#: includes/dashboard-texts.php:162
+msgid "Has reception?"
+msgstr ""
+
+#: includes/dashboard-texts.php:163
+msgid "Not asked"
+msgstr ""
+
+#: includes/dashboard-texts.php:164
+msgid "Yes"
+msgstr ""
+
+#: includes/dashboard-texts.php:165
+msgid "No (on request)"
+msgstr ""
+
+#: includes/dashboard-texts.php:166
+msgid "Hotel booking code"
+msgstr ""
+
+#: includes/dashboard-texts.php:171
+#: texts.php:129
+msgid "Number of bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:172
+msgid "Cabin bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:173
+msgid "Medium bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:174
+msgid "Oversize bags"
+msgstr ""
+
+#: includes/dashboard-texts.php:175
+msgid "Customer full name"
+msgstr ""
+
+#: includes/dashboard-texts.php:176
+msgid "Customer email"
+msgstr ""
+
+#: includes/dashboard-texts.php:177
+#: texts.php:153
+msgid "Contact channel"
+msgstr ""
+
+#: includes/dashboard-texts.php:178
+#: texts.php:158
+msgid "Country code"
+msgstr ""
+
+#: includes/dashboard-texts.php:179
+#: texts.php:159
+msgid "Phone number"
+msgstr ""
+
+#: includes/dashboard-texts.php:180
+msgid "ID (KakaoTalk / Messenger)"
+msgstr ""
+
+#: includes/dashboard-texts.php:186
+msgid "Luggage photo (optional)"
+msgstr ""
+
+#: includes/dashboard-texts.php:187
+msgid "Create booking"
+msgstr ""
+
+#: includes/dashboard-texts.php:188
+msgid "Save changes"
+msgstr ""
+
+#: includes/dashboard-texts.php:189
+msgid "Cancel"
+msgstr ""
+
+#: includes/dashboard-texts.php:190
+msgid "The price is calculated by the server from the live price list and locked when you save."
+msgstr ""
+
+#: includes/dashboard-texts.php:191
+msgid "This booking is already moving, so only contact details and the note can be changed."
+msgstr ""
+
+#: includes/dashboard-texts.php:192
+msgid "This booking is closed. Use \"Add a note\" on the detail page instead."
+msgstr ""
+
+#: includes/dashboard-texts.php:193
+msgid "Saved."
+msgstr ""
+
+#: includes/dashboard-texts.php:194
+msgid "Working…"
+msgstr ""
+
+#: includes/dashboard-texts.php:195
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: includes/dashboard-texts.php:199
+msgid "Pricing"
+msgstr ""
+
+#: includes/dashboard-texts.php:200
+msgid "Hours & slots"
+msgstr ""
+
+#: includes/dashboard-texts.php:201
+msgid "Operations & capacity"
+msgstr ""
+
+#: includes/dashboard-texts.php:202
+msgid "Hub & meeting point"
+msgstr ""
+
+#: includes/dashboard-texts.php:207
+msgid "The new price applies to orders created from now on. Orders already created keep their price. Save?"
+msgstr ""
+
+#: includes/dashboard-texts.php:208
+msgid "Airport slots (HH:MM, separated by spaces or commas)"
+msgstr ""
+
+#: includes/dashboard-texts.php:209
+msgid "Storage opens"
+msgstr ""
+
+#: includes/dashboard-texts.php:210
+msgid "Storage closes"
+msgstr ""
+
+#: includes/dashboard-texts.php:211
+msgid "New service must start at least this many minutes from now"
+msgstr ""
+
+#: includes/dashboard-texts.php:212
+msgid "Hotel → Hotel: same-day bookings only before"
+msgstr ""
+
+#: includes/dashboard-texts.php:213
+msgid "Slot changes apply to new bookings only; existing bookings keep their time."
+msgstr ""
+
+#: includes/dashboard-texts.php:214
+msgid "Van capacity per loop (bags)"
+msgstr ""
+
+#: includes/dashboard-texts.php:215
+msgid "Capacity warning threshold (%)"
+msgstr ""
+
+#: includes/dashboard-texts.php:216
+msgid "Loops per day"
+msgstr ""
+
+#: includes/dashboard-texts.php:217
+msgid "Saved for the dispatch release; nothing reads these values yet."
+msgstr ""
+
+#: includes/dashboard-texts.php:218
+msgid "Hub name"
+msgstr ""
+
+#: includes/dashboard-texts.php:219
+msgid "Hub address"
+msgstr ""
+
+#: includes/dashboard-texts.php:220
+msgid "Hub opening hours (text)"
+msgstr ""
+
+#: includes/dashboard-texts.php:221
+msgid "Airport meeting point"
+msgstr ""
+
+#: includes/dashboard-texts.php:222
+msgid "Leave blank to keep the standard translated text. Changes show on the storage form, order detail and tracking page."
+msgstr ""
+
+#: includes/dashboard-texts.php:223
+msgid "Change history"
+msgstr ""
+
+#: includes/dashboard-texts.php:224
+msgid "No changes yet."
+msgstr ""
+
+#: includes/dashboard-texts.php:225
+#, php-format
+msgid "Settings saved. %d field(s) changed."
+msgstr ""
+
+#: includes/dashboard-texts.php:226
+msgid "Accounts and permissions are managed in wp-admin → Booking Plugin."
+msgstr ""
+
+#: includes/dashboard-texts.php:229
+msgid "Tick that the hotel has confirmed."
+msgstr ""
+
+#: includes/dashboard-texts.php:230
+msgid "Confirm that you checked the booking code and name."
+msgstr ""
+
+#: includes/dashboard-texts.php:231
+msgid "Enter the EasyLugg tag code."
+msgstr ""
+
+#: includes/dashboard-texts.php:232
+msgid "Enter how many bags you received."
+msgstr ""
+
+#: includes/dashboard-texts.php:233
+msgid "The bag count differs from the booking. Write the reason."
+msgstr ""
+
+#: includes/dashboard-texts.php:234
+msgid "Check-in cannot be completed without at least 2 photos."
+msgstr ""
+
+#: includes/dashboard-texts.php:235
+msgid "Choose Loop 1 or Loop 2."
+msgstr ""
+
+#: includes/dashboard-texts.php:236
+msgid "Choose who received the luggage."
+msgstr ""
+
+#: includes/dashboard-texts.php:237
+msgid "Enter the receiver name."
+msgstr ""
+
+#: includes/dashboard-texts.php:238
+msgid "Proxy pickup must be registered in advance and ID shown. Do not hand over without it."
+msgstr ""
+
+#: includes/dashboard-texts.php:239
+msgid "Add at least 1 handover photo."
+msgstr ""
+
+#: includes/dashboard-texts.php:240
+msgid "Record the payment before completing the order."
+msgstr ""
+
+#: includes/dashboard-texts.php:241
+msgid "Cash orders need a valid invoice number before completing."
+msgstr ""
+
+#: includes/dashboard-texts.php:242
+msgid "That invoice number is already used by another booking."
+msgstr ""
+
+#: includes/dashboard-texts.php:243
+msgid "A reason is required to cancel."
+msgstr ""
+
+#: includes/dashboard-texts.php:244
+msgid "A note is required to record a no-show."
+msgstr ""
+
+#: includes/dashboard-texts.php:245
+msgid "Unknown action."
+msgstr ""
+
+#: includes/dashboard-texts.php:246
+msgid "That step is not allowed from the current status."
+msgstr ""
+
+#: includes/dashboard-texts.php:247
+msgid "This booking is closed and cannot be changed."
+msgstr ""
+
+#: includes/dashboard-texts.php:248
+msgid "Someone else just changed this booking. Reload the page to see the latest."
+msgstr ""
+
+#: includes/dashboard-texts.php:250
+msgid "A photo could not be saved. Use JPG or PNG up to 3 MB and try again."
+msgstr ""
+
+#: includes/dashboard-texts.php:251
+msgid "Could not save. Nothing was changed."
+msgstr ""
+
+#: includes/dashboard-texts.php:252
+msgid "The service date has already passed."
+msgstr ""
+
+#: includes/dashboard-texts.php:253
+#, php-format
+msgid "The service time must be later than now plus the buffer (%d minutes)."
+msgstr ""
+
+#: includes/dashboard-texts.php:254
+#, php-format
+msgid "Hotel → Hotel for today must be created before %s. Choose tomorrow or later."
+msgstr ""
+
+#: includes/dashboard-texts.php:255
+msgid "Choose a source."
+msgstr ""
+
+#: includes/dashboard-texts.php:256
+msgid "Choose a valid payment method for this source."
+msgstr ""
+
+#: includes/dashboard-texts.php:257
+msgid "Enter the original OTA booking code."
+msgstr ""
+
+#: includes/dashboard-texts.php:258
+msgid "Enter the amount received."
+msgstr ""
+
+#: includes/dashboard-texts.php:259
+msgid "Write a note."
+msgstr ""
+
+#: includes/dashboard-texts.php:260
+msgid "Payment was already recorded."
+msgstr ""
+
+#: includes/dashboard-texts.php:261
+msgid "Prices must be whole numbers in steps of 1,000 and not above the allowed maximum."
+msgstr ""
+
+#: includes/dashboard-texts.php:262
+msgid "Use HH:MM for every slot."
+msgstr ""
+
+#: includes/dashboard-texts.php:263
+msgid "Opening and closing must be on 30-minute steps and closing must be later than opening."
+msgstr ""
+
+#: includes/dashboard-texts.php:264
+msgid "The buffer must be a whole number of minutes, 0–240."
+msgstr ""
+
+#: includes/dashboard-texts.php:265
+msgid "Use HH:MM for the cut-off time."
+msgstr ""
+
+#: includes/dashboard-texts.php:266
+msgid "Check the capacity numbers."
+msgstr ""
+
+#: includes/dashboard-texts.php:267
+msgid "A hub field is too long."
+msgstr ""
+
+#: includes/dashboard-texts.php:268
+msgid "Unknown settings group."
+msgstr ""
+
+#: includes/dashboard-texts.php:269
+msgid "This booking cannot be edited at its current status."
+msgstr ""
+
+#: includes/dashboard-texts.php:272
+msgid "Booking created"
+msgstr ""
+
+#: includes/dashboard-texts.php:273
+msgid "Status changed"
+msgstr ""
+
+#: includes/dashboard-texts.php:274
+msgid "Edited"
+msgstr ""
+
+#: includes/dashboard-texts.php:275
+msgid "Price recalculated"
+msgstr ""
+
+#: includes/dashboard-texts.php:276
+msgid "Payment recorded"
+msgstr ""
+
+#: includes/dashboard-texts.php:277
+msgid "Invoice number set"
+msgstr ""
+
+#: includes/dashboard-texts.php:279
+msgid "Incident reported"
+msgstr ""
+
+#: includes/dashboard-texts.php:281
+msgid "Luggage released"
+msgstr ""
+
+#: includes/dashboard-texts.php:282
+msgid "Review flag cleared"
+msgstr ""
+
+#: includes/dashboard-texts.php:283
+msgid "Setting changed"
+msgstr ""
+
+#: texts.php:21
+msgid "EasyLugg delivery"
+msgstr ""
+
+#: texts.php:22
+msgid "Book luggage delivery"
+msgstr ""
+
+#: texts.php:23
+msgid "Choose your route, add your luggage details and review your estimated price."
+msgstr ""
+
+#: texts.php:24
+msgid "Please enable JavaScript to complete a booking."
+msgstr ""
+
+#: texts.php:25
+msgid "Leave this field empty"
+msgstr ""
+
+#: texts.php:28
+msgid "Choose your route"
+msgstr ""
+
+#: texts.php:29
+msgid "Airport → Hotel"
+msgstr ""
+
+#: texts.php:30
+msgid "Popular"
+msgstr ""
+
+#: texts.php:31
+msgid "Arrival pick-up at DAD Terminal 2 to Hotel"
+msgstr ""
+
+#: texts.php:32
+msgid "Hotel → Airport"
+msgstr ""
+
+#: texts.php:33
+msgid "Leave bags with front desk, pick up before departure check-in"
+msgstr ""
+
+#: texts.php:34
+#: texts.php:262
+msgid "Hotel → Hotel"
+msgstr ""
+
+#: texts.php:35
+msgid "Inter-resort city transfers across Da Nang, Son Tra, and Hoi An"
+msgstr ""
+
+#: texts.php:38
+msgid "Choose a service"
+msgstr ""
+
+#: texts.php:39
+msgid "Luggage delivery"
+msgstr ""
+
+#: texts.php:40
+msgid "Airport ↔ hotel and hotel ↔ hotel transfers"
+msgstr ""
+
+#: texts.php:41
+#: texts.php:201
+msgid "Luggage storage"
+msgstr ""
+
+#: texts.php:42
+msgid "Store bags at our Hoi An hub, pick up when you need them"
+msgstr ""
+
+#: texts.php:45
+msgid "Booking steps"
+msgstr ""
+
+#: texts.php:46
+#: texts.php:258
+msgid "Service"
+msgstr ""
+
+#: texts.php:47
+#: texts.php:227
+msgid "Contact"
+msgstr ""
+
+#: texts.php:48
+msgid "Review"
+msgstr ""
+
+#: texts.php:49
+#: texts.php:304
+#: texts.php:370
+msgid "Completed"
+msgstr ""
+
+#: texts.php:50
+msgid "In Progress"
+msgstr ""
+
+#: texts.php:51
+#: texts.php:306
+msgid "Upcoming"
+msgstr ""
+
+#: texts.php:52
+#, php-format
+msgid "Step %d of 3"
+msgstr ""
+
+#: texts.php:55
+#: texts.php:208
+msgid "Pick-up From"
+msgstr ""
+
+#: texts.php:56
+msgid "Departure airport"
+msgstr ""
+
+#: texts.php:57
+msgid "DAD - T2 - Danang International Airport"
+msgstr ""
+
+#: texts.php:59
+msgid "The day we collect your luggage."
+msgstr ""
+
+#: texts.php:61
+#: texts.php:68
+#: texts.php:122
+#: texts.php:127
+msgid "Select a time slot"
+msgstr ""
+
+#: texts.php:62
+msgid "Please select a time one hour later than the scheduled landing time. Landing time is not automatically checked."
+msgstr ""
+
+#: texts.php:64
+msgid "Maximum 7 letters or numbers."
+msgstr ""
+
+#: texts.php:65
+#: texts.php:209
+msgid "Delivery To"
+msgstr ""
+
+#: texts.php:66
+msgid "Destination airport"
+msgstr ""
+
+#: texts.php:69
+msgid "Choose a time at least 4 hours before your flight. Leave bags at hotel reception before 11:00; collection is between 11:00 and 14:00."
+msgstr ""
+
+#: texts.php:71
+msgid "Same-day delivery is included. The first night of storage is free; further nights are charged per bag."
+msgstr ""
+
+#: texts.php:72
+msgid "Departure date"
+msgstr ""
+
+#: texts.php:73
+msgid "The day your flight departs. The first night of storage is free; further nights are charged per bag."
+msgstr ""
+
+#: texts.php:74
+msgid "Hotel booking code (optional)"
+msgstr ""
+
+#: texts.php:75
+msgid "Helps the hotel identify your booking. Leave blank if you do not have it."
+msgstr ""
+
+#: texts.php:76
+msgid "Departure hotel booking code (optional)"
+msgstr ""
+
+#: texts.php:77
+msgid "Destination hotel booking code (optional)"
+msgstr ""
+
+#: texts.php:79
+msgid "Same day — send before 11:00, delivery before 17:00"
+msgstr ""
+
+#: texts.php:80
+msgid "Next day — delivery before 17:00"
+msgstr ""
+
+#: texts.php:81
+msgid "How many bags?"
+msgstr ""
+
+#: texts.php:82
+msgid "Complimentary tag seals & insurance included"
+msgstr ""
+
+#: texts.php:83
+msgid "Cabin Bag (<7 kg)"
+msgstr ""
+
+#: texts.php:84
+msgid "Small backpacks, carry-on rolling bags"
+msgstr ""
+
+#: texts.php:85
+msgid "Medium Suitcase (7-23 kg)"
+msgstr ""
+
+#: texts.php:86
+msgid "Standard checked rolling luggage"
+msgstr ""
+
+#: texts.php:87
+msgid "Oversize / Sports (>23 kg)"
+msgstr ""
+
+#: texts.php:88
+msgid "Golf bags, surfboards, large boxes"
+msgstr ""
+
+#: texts.php:89
+msgid "bag"
+msgstr ""
+
+#. translators: 1: price in VND (number), 2: bag unit word, e.g. "bag".
+#: texts.php:91
+#, php-format
+msgid "%1$s VND / %2$s"
+msgstr ""
+
+#: texts.php:92
+#, php-format
+msgid "Decrease %s bags"
+msgstr ""
+
+#: texts.php:93
+#, php-format
+msgid "Increase %s bags"
+msgstr ""
+
+#: texts.php:94
+msgid "Promotion code (optional)"
+msgstr ""
+
+#: texts.php:95
+msgid "Promotion codes are recorded; automatic discounts are not enabled in this demo."
+msgstr ""
+
+#: texts.php:96
+msgid "Note for our team (optional)"
+msgstr ""
+
+#: texts.php:97
+msgid "Anything our team should know before pickup."
+msgstr ""
+
+#: texts.php:99
+msgid "Upload photos of your luggage (optional) for extra identification"
+msgstr ""
+
+#: texts.php:100
+msgid "JPG or PNG, up to 3 MB"
+msgstr ""
+
+#: texts.php:101
+msgid "A photo is encouraged — it helps EasyLugg identify your luggage."
+msgstr ""
+
+#: texts.php:102
+msgid "JPG or PNG, up to 3 MB. A photo helps EasyLugg identify your luggage at the hotel."
+msgstr ""
+
+#: texts.php:103
+msgid "JPG or PNG, up to 3 MB. A photo is encouraged for Airport to Hotel."
+msgstr ""
+
+#: texts.php:104
+msgid "(optional)"
+msgstr ""
+
+#: texts.php:105
+msgid "Please upload a photo on the day you hand over your luggage at reception, so EasyLugg can collect the right luggage."
+msgstr ""
+
+#: texts.php:106
+msgid "I understand"
+msgstr ""
+
+#: texts.php:107
+msgid "A hotel without reception needs manual confirmation. This booking will be sent as an on-request enquiry; no payment will be taken."
+msgstr ""
+
+#: texts.php:108
+msgid "Continue"
+msgstr ""
+
+#: texts.php:109
+msgid "Zero prepayment required today • Free cancellation up to 24h before flight"
+msgstr ""
+
+#: texts.php:112
+msgid "Storage location"
+msgstr ""
+
+#: texts.php:113
+msgid "Open 08:00 – 20:00 daily. One hub for now: Hoi An."
+msgstr ""
+
+#: texts.php:114
+msgid "HoiAnGO Storage - 97 Nguyễn Tất Thành, Hội An Tây, Đà Nẵng, Vietnam - V8P9+FR Hoi An Tay, Da Nang, Vietnam"
+msgstr ""
+
+#: texts.php:115
+msgid "HoiAnGO Storage — Hoi An"
+msgstr ""
+
+#: texts.php:116
+msgid "97 Nguyễn Tất Thành, Hội An"
+msgstr ""
+
+#: texts.php:117
+msgid "Open 08:00 – 20:00 daily"
+msgstr ""
+
+#: texts.php:118
+#: texts.php:205
+msgid "Drop-off"
+msgstr ""
+
+#: texts.php:120
+msgid "The day you bring your luggage to the hub."
+msgstr ""
+
+#: texts.php:123
+#: texts.php:206
+msgid "Pick-up"
+msgstr ""
+
+#: texts.php:125
+msgid "Defaults to the drop-off date — change it if you need more days."
+msgstr ""
+
+#: texts.php:128
+msgid "Pick-up time must be later than the drop-off time."
+msgstr ""
+
+#: texts.php:130
+msgid "Charged per bag per day. No size split, no bag limit."
+msgstr ""
+
+#: texts.php:131
+#, php-format
+msgid "₫%s per bag per day"
+msgstr ""
+
+#: texts.php:132
+#, php-format
+msgid "Estimated storage total: ₫%s"
+msgstr ""
+
+#: texts.php:133
+msgid "Add bags and pick your dates to see the price."
+msgstr ""
+
+#: texts.php:134
+msgid "Operating Hours & Daily Billing Policy"
+msgstr ""
+
+#: texts.php:135
+msgid "Drop-off and pick-up available strictly between 08:00 and 20:00 daily. Rates are billed per bag, per calendar day (or part thereof)."
+msgstr ""
+
+#. translators: 1: number of bags, 2: number of days.
+#: texts.php:137
+#, php-format
+msgid "%1$d bags × %2$d days"
+msgstr ""
+
+#: texts.php:141
+msgid "Start typing to search 20 hotels in Da Nang and Hoi An. You can also type any hotel name."
+msgstr ""
+
+#: texts.php:142
+msgid "Does this hotel have reception?"
+msgstr ""
+
+#: texts.php:143
+msgid "Please select"
+msgstr ""
+
+#: texts.php:144
+msgid "Yes — staffed reception"
+msgstr ""
+
+#: texts.php:145
+msgid "No — private home / no reception"
+msgstr ""
+
+#: texts.php:148
+msgid "Your contact details"
+msgstr ""
+
+#: texts.php:149
+msgid "Full name"
+msgstr ""
+
+#: texts.php:150
+msgid "As shown on your passport or ID."
+msgstr ""
+
+#: texts.php:152
+msgid "Your booking confirmation and updates will be sent here."
+msgstr ""
+
+#: texts.php:154
+msgid "WhatsApp"
+msgstr ""
+
+#: texts.php:155
+msgid "KakaoTalk"
+msgstr ""
+
+#: texts.php:156
+msgid "Zalo"
+msgstr ""
+
+#: texts.php:157
+msgid "Messenger"
+msgstr ""
+
+#: texts.php:160
+msgid "e.g. 10 1234 5678"
+msgstr ""
+
+#: texts.php:161
+msgid "Your KakaoTalk ID"
+msgstr ""
+
+#: texts.php:162
+msgid "Your Messenger ID"
+msgstr ""
+
+#: texts.php:163
+msgid "+ Add another contact"
+msgstr ""
+
+#: texts.php:164
+msgid "Remove"
+msgstr ""
+
+#: texts.php:165
+msgid "Passport number (optional)"
+msgstr ""
+
+#: texts.php:166
+msgid "Optional — helps us verify your identity at handover."
+msgstr ""
+
+#: texts.php:167
+msgid "Service Terms & Guarantee Agreement"
+msgstr ""
+
+#: texts.php:168
+msgid "Term of Condition"
+msgstr ""
+
+#: texts.php:169
+msgid "I agree to the baggage transit liability conditions, tamper-seal protocols, and baggage inspection guidelines."
+msgstr ""
+
+#: texts.php:170
+msgid "Term of Service"
+msgstr ""
+
+#: texts.php:171
+msgid "I confirm the accuracy of flight/hotel itinerary and acknowledge free cancellation up to 24h before scheduled drop-off."
+msgstr ""
+
+#: texts.php:172
+msgid "Back to service"
+msgstr ""
+
+#: texts.php:173
+msgid "Review booking"
+msgstr ""
+
+#: texts.php:176
+msgid "Review your booking"
+msgstr ""
+
+#: texts.php:177
+msgid "Choose a demo payment method"
+msgstr ""
+
+#: texts.php:178
+msgid "Visa / Mastercard"
+msgstr ""
+
+#: texts.php:179
+msgid "Instant simulation"
+msgstr ""
+
+#: texts.php:180
+msgid "Apple Pay"
+msgstr ""
+
+#: texts.php:181
+msgid "One-tap demo"
+msgstr ""
+
+#: texts.php:182
+msgid "Google Pay"
+msgstr ""
+
+#: texts.php:183
+msgid "Fast checkout"
+msgstr ""
+
+#: texts.php:184
+msgid "Bank transfer (VietQR / Fast transfer)"
+msgstr ""
+
+#: texts.php:185
+msgid "Domestic banks"
+msgstr ""
+
+#: texts.php:186
+msgid "Cash on delivery"
+msgstr ""
+
+#: texts.php:187
+msgid "Pay upon airport intake"
+msgstr ""
+
+#: texts.php:188
+msgid "Demo mode: no real payment is processed or charged."
+msgstr ""
+
+#: texts.php:189
+msgid "This is an on-request enquiry. No payment will be taken until our team confirms the destination."
+msgstr ""
+
+#: texts.php:190
+msgid "Back to contact"
+msgstr ""
+
+#: texts.php:191
+msgid "Confirm demo booking"
+msgstr ""
+
+#: texts.php:192
+msgid "Send booking request"
+msgstr ""
+
+#: texts.php:193
+msgid "Submitting…"
+msgstr ""
+
+#: texts.php:196
+#: texts.php:298
+msgid "Booking summary"
+msgstr ""
+
+#: texts.php:197
+msgid "Service route"
+msgstr ""
+
+#: texts.php:198
+msgid "Airport to hotel"
+msgstr ""
+
+#: texts.php:199
+msgid "Hotel to airport"
+msgstr ""
+
+#: texts.php:200
+msgid "Hotel to hotel"
+msgstr ""
+
+#: texts.php:202
+#: texts.php:203
+msgid "Luggage Storage"
+msgstr ""
+
+#: texts.php:207
+msgid "Luggage Delivery"
+msgstr ""
+
+#: texts.php:210
+#, php-format
+msgid "Pickup %s"
+msgstr ""
+
+#: texts.php:211
+#, php-format
+msgid "Flight: %s"
+msgstr ""
+
+#: texts.php:212
+#, php-format
+msgid "Ref: %s"
+msgstr ""
+
+#: texts.php:213
+#, php-format
+msgid "Delivery %s"
+msgstr ""
+
+#: texts.php:214
+msgid "Same day before 17:00"
+msgstr ""
+
+#: texts.php:215
+msgid "Next day before 17:00"
+msgstr ""
+
+#: texts.php:216
+msgid "Overnight storage (1 night)"
+msgstr ""
+
+#: texts.php:217
+#, php-format
+msgid "Overnight storage (%d nights)"
+msgstr ""
+
+#: texts.php:218
+msgid "Luggage Manifest"
+msgstr ""
+
+#: texts.php:219
+#, php-format
+msgid "%1$sx %2$s"
+msgstr ""
+
+#: texts.php:220
+msgid "No luggage selected yet"
+msgstr ""
+
+#: texts.php:221
+msgid "Tamper-evident seals"
+msgstr ""
+
+#: texts.php:222
+msgid "Included (Free)"
+msgstr ""
+
+#: texts.php:223
+msgid "Insurance"
+msgstr ""
+
+#: texts.php:224
+msgid "Complimentary"
+msgstr ""
+
+#: texts.php:230
+msgid "Estimated total:"
+msgstr ""
+
+#: texts.php:231
+#, php-format
+msgid "%s VND"
+msgstr ""
+
+#: texts.php:232
+#, php-format
+msgid "(~$%s USD)"
+msgstr ""
+
+#: texts.php:233
+msgid "Tax and airport terminal handling included. Zero cancellation penalty."
+msgstr ""
+
+#: texts.php:234
+#, php-format
+msgid "Estimated total: %1$s VND (%2$s)"
+msgstr ""
+
+#: texts.php:235
+msgid "Choose at least one bag to see your estimated price."
+msgstr ""
+
+#: texts.php:236
+msgid "Live GPS Tracking"
+msgstr ""
+
+#: texts.php:237
+msgid "Tamper-proof zip"
+msgstr ""
+
+#: texts.php:240
+msgid "Booking Details"
+msgstr ""
+
+#: texts.php:241
+msgid "Edit details"
+msgstr ""
+
+#: texts.php:243
+msgid "Luggage"
+msgstr ""
+
+#: texts.php:244
+msgid "Delivery from"
+msgstr ""
+
+#: texts.php:245
+msgid "Delivery to"
+msgstr ""
+
+#: texts.php:246
+msgid " (DAD T2)"
+msgstr ""
+
+#: texts.php:250
+#: texts.php:274
+msgid "Booking received"
+msgstr ""
+
+#: texts.php:251
+msgid "Booking request sent"
+msgstr ""
+
+#: texts.php:252
+msgid "Your luggage transfer request between Da Nang and Hoi An has been registered in the dispatch queue."
+msgstr ""
+
+#: texts.php:253
+msgid "Your hotel needs manual confirmation. Our team will contact you before confirming the service."
+msgstr ""
+
+#: texts.php:254
+msgid "This is a demo booking. No real payment was processed."
+msgstr ""
+
+#: texts.php:255
+msgid "Booking reference"
+msgstr ""
+
+#: texts.php:256
+msgid "Copy code"
+msgstr ""
+
+#: texts.php:257
+msgid "Copied"
+msgstr ""
+
+#: texts.php:260
+msgid "DAD Airport → Hotel"
+msgstr ""
+
+#: texts.php:261
+msgid "Hotel → DAD Airport"
+msgstr ""
+
+#: texts.php:263
+#, php-format
+msgid "approx. $%s USD"
+msgstr ""
+
+#: texts.php:264
+msgid "Open your booking status"
+msgstr ""
+
+#: texts.php:265
+msgid "Book another delivery"
+msgstr ""
+
+#: texts.php:266
+msgid "A confirmation email has been sent. Our team will contact you if anything needs checking."
+msgstr ""
+
+#: texts.php:267
+msgid "A confirmation email has been sent to your email address."
+msgstr ""
+
+#: texts.php:270
+msgid "EasyLugg tracking"
+msgstr ""
+
+#: texts.php:271
+msgid "Booking status"
+msgstr ""
+
+#: texts.php:273
+msgid "Check the tracking link in your confirmation email or contact our team for help."
+msgstr ""
+
+#: texts.php:275
+msgid "Luggage collected"
+msgstr ""
+
+#: texts.php:276
+msgid "In transit"
+msgstr ""
+
+#: texts.php:278
+msgid "Booking code:"
+msgstr ""
+
+#: texts.php:279
+msgid "Created:"
+msgstr ""
+
+#: texts.php:280
+msgid "Your booking is on request. Our team will check the destination and contact you before confirming."
+msgstr ""
+
+#: texts.php:281
+msgid "This booking has been cancelled. Please contact EasyLugg if you need help."
+msgstr ""
+
+#: texts.php:282
+msgid "We could not complete this booking because the handover did not take place at the agreed time. Please contact EasyLugg to arrange a new booking."
+msgstr ""
+
+#: texts.php:283
+msgid "For changes or cancellation, contact EasyLugg customer service. Bookings cannot be changed or cancelled online."
+msgstr ""
+
+#: texts.php:284
+msgid "Track your booking"
+msgstr ""
+
+#: texts.php:285
+msgid "Enter your booking code to see your booking details and status."
+msgstr ""
+
+#: texts.php:286
+msgid "Booking code"
+msgstr ""
+
+#: texts.php:287
+msgid "e.g. ELUGG-261110-AB12"
+msgstr ""
+
+#: texts.php:288
+msgid "Track booking"
+msgstr ""
+
+#: texts.php:289
+msgid "Looking up your booking…"
+msgstr ""
+
+#: texts.php:290
+msgid "No booking matches this code. Check the code and try again."
+msgstr ""
+
+#: texts.php:291
+msgid "Too many lookups. Please wait a few minutes and try again."
+msgstr ""
+
+#: texts.php:292
+msgid "Find your code in your confirmation email."
+msgstr ""
+
+#: texts.php:293
+#, php-format
+msgid "Showing booking: %s"
+msgstr ""
+
+#: texts.php:294
+msgid "No booking looked up yet?"
+msgstr ""
+
+#: texts.php:295
+msgid "Enter your booking code above to see your booking details and live status."
+msgstr ""
+
+#: texts.php:296
+msgid "Luggage Journey"
+msgstr ""
+
+#: texts.php:297
+#, php-format
+msgid "Stage %1$d of %2$d"
+msgstr ""
+
+#: texts.php:299
+msgid "Origin"
+msgstr ""
+
+#: texts.php:300
+msgid "Destination"
+msgstr ""
+
+#: texts.php:301
+msgid "Da Nang Airport"
+msgstr ""
+
+#: texts.php:302
+#, php-format
+msgid "Step %d"
+msgstr ""
+
+#: texts.php:303
+#, php-format
+msgid "Stage %d of 4"
+msgstr ""
+
+#: texts.php:305
+msgid "Active stage"
+msgstr ""
+
+#: texts.php:307
+msgid "Total price"
+msgstr ""
+
+#: texts.php:310
+msgid "Your booking session has expired. Refresh the page and try again."
+msgstr ""
+
+#: texts.php:311
+msgid "Too many booking attempts. Please wait a few minutes and try again."
+msgstr ""
+
+#: texts.php:312
+msgid "The booking could not be submitted."
+msgstr ""
+
+#: texts.php:313
+msgid "Refresh the page and try again."
+msgstr ""
+
+#: texts.php:314
+msgid "Choose one of the available delivery routes."
+msgstr ""
+
+#: texts.php:315
+msgid "Choose a valid service date from today onward."
+msgstr ""
+
+#: texts.php:316
+msgid "Enter a valid flight number of up to 7 characters."
+msgstr ""
+
+#: texts.php:317
+msgid "Select an airport time slot (08:00–11:00 or 19:00–20:00)."
+msgstr ""
+
+#: texts.php:318
+msgid "Choose a pickup time later than the current time."
+msgstr ""
+
+#: texts.php:319
+msgid "Choose an airport delivery time."
+msgstr ""
+
+#: texts.php:320
+msgid "Choose a hotel delivery day."
+msgstr ""
+
+#: texts.php:321
+msgid "Choose a delivery date."
+msgstr ""
+
+#: texts.php:322
+msgid "Delivery date must be the service date or later."
+msgstr ""
+
+#: texts.php:323
+msgid "Choose a valid drop-off date from today onward."
+msgstr ""
+
+#: texts.php:324
+msgid "Pick-up date must be on or after the drop-off date."
+msgstr ""
+
+#: texts.php:325
+msgid "Pick-up time must be later than the drop-off time on the same day."
+msgstr ""
+
+#: texts.php:326
+msgid "Add at least 1 bag."
+msgstr ""
+
+#: texts.php:327
+msgid "Choose a drop-off time."
+msgstr ""
+
+#: texts.php:328
+msgid "Choose a pick-up time."
+msgstr ""
+
+#: texts.php:329
+msgid "Choose a storage location."
+msgstr ""
+
+#: texts.php:330
+msgid "Each luggage count must be between 0 and 20."
+msgstr ""
+
+#: texts.php:331
+msgid "Add at least one bag to your booking."
+msgstr ""
+
+#: texts.php:332
+msgid "Enter your name, a valid email address and at least one contact channel."
+msgstr ""
+
+#: texts.php:333
+msgid "Accept both required terms before continuing."
+msgstr ""
+
+#: texts.php:334
+msgid "Please add at least one contact channel."
+msgstr ""
+
+#: texts.php:335
+msgid "Enter a valid phone number for this contact channel."
+msgstr ""
+
+#: texts.php:336
+msgid "Enter the ID for this contact channel."
+msgstr ""
+
+#: texts.php:337
+msgid "Select a demo payment method."
+msgstr ""
+
+#: texts.php:338
+msgid "We could not save your booking. Please try again; your request has not been confirmed."
+msgstr ""
+
+#: texts.php:339
+msgid "Enter the hotel name and full address."
+msgstr ""
+
+#: texts.php:340
+msgid "Tell us whether the hotel has a staffed reception."
+msgstr ""
+
+#: texts.php:341
+msgid "Enter both map coordinates, or leave both blank."
+msgstr ""
+
+#: texts.php:342
+msgid "Enter valid latitude and longitude coordinates."
+msgstr ""
+
+#: texts.php:343
+msgid "Enter a flight number of up to 7 letters or numbers."
+msgstr ""
+
+#: texts.php:344
+msgid "Enter a valid phone number."
+msgstr ""
+
+#: texts.php:345
+msgid "Add at least one bag to continue."
+msgstr ""
+
+#: texts.php:346
+msgid "Choose a demo payment method to continue."
+msgstr ""
+
+#: texts.php:347
+msgid "We could not submit your booking. Please try again."
+msgstr ""
+
+#: texts.php:348
+msgid "We could not reach the server. Your booking is not confirmed; please retry."
+msgstr ""
+
+#: texts.php:349
+msgid "Upload a JPG or PNG luggage photo for hotel collection."
+msgstr ""
+
+#: texts.php:350
+msgid "The luggage photo upload is invalid. Please try again."
+msgstr ""
+
+#: texts.php:351
+msgid "The luggage photo could not be uploaded. Try a JPG or PNG no larger than 3 MB."
+msgstr ""
+
+#: texts.php:352
+msgid "The luggage photo must be no larger than 3 MB."
+msgstr ""
+
+#: texts.php:353
+msgid "Only JPG and PNG luggage photos are accepted."
+msgstr ""
+
+#: texts.php:354
+msgid "The uploaded file is not a valid JPG or PNG image."
+msgstr ""
+
+#: texts.php:355
+msgid "Private photo storage is unavailable. Please contact EasyLugg."
+msgstr ""
+
+#: texts.php:356
+msgid "The luggage photo could not be saved. Please try again."
+msgstr ""
+
+#: texts.php:357
+msgid "The uploaded photo could not be stored safely."
+msgstr ""
+
+#: texts.php:358
+msgid "The booking could not be verified. Please contact EasyLugg."
+msgstr ""
+
+#: texts.php:359
+msgid "Your booking is saved, but we could not send the confirmation email. Save your booking code and tracking link now."
+msgstr ""
+
+#: texts.php:362
+#, php-format
+msgid "EasyLugg booking received: %s"
+msgstr ""
+
+#: texts.php:363
+#, php-format
+msgid ""
+"Hello,\n"
+"\n"
+"Your EasyLugg delivery booking is %1$s.\n"
+"Booking code: %2$s\n"
+"Estimated price: %3$s VND\n"
+"\n"
+"Track your booking: %4$s\n"
+"\n"
+"This is a demo booking. No real payment was processed.\n"
+"\n"
+"For changes, please contact EasyLugg customer service."
+msgstr ""
+
+#: texts.php:364
+#, php-format
+msgid ""
+"Hello,\n"
+"\n"
+"Your EasyLugg storage booking is %1$s.\n"
+"Booking code: %2$s\n"
+"Estimated price: %3$s VND\n"
+"\n"
+"Track your booking: %4$s\n"
+"\n"
+"This is a demo booking. No real payment was processed.\n"
+"\n"
+"For changes, please contact EasyLugg customer service."
+msgstr ""
+
+#: texts.php:367
+msgid "On request"
+msgstr ""
+
+#: texts.php:368
+msgid "Booking received (demo)"
+msgstr ""
+
+#: texts.php:369
+msgid "Collected"
+msgstr ""
+
+#: texts.php:371
+msgid "Cancelled"
+msgstr ""
+
+#: texts.php:372
+msgid "No-show"
+msgstr ""
+
+#: texts.php:373
+msgid "Unknown"
+msgstr ""

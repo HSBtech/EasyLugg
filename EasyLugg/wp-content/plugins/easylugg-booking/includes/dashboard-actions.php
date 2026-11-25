@@ -150,17 +150,23 @@ final class EasyLugg_Dashboard_Actions {
 	 * @return bool
 	 */
 	private static function email_customer( $row ) {
-		$plugin  = EasyLugg_Dashboard::plugin();
-		$storage = 'ST' === $row->corridor;
-		$subject = sprintf( $plugin->text( 'email.subject_received' ), $row->booking_code );
-		$message = sprintf(
-			$plugin->text( $storage ? 'email.body_received_storage' : 'email.body_received' ),
-			$plugin->status_label( $row->status ),
-			$row->booking_code,
-			number_format_i18n( (int) $row->price_total ),
-			EasyLugg_Dashboard::tracking_url( $row )
+		// Send in the customer's booking language, not the staff member's.
+		return (bool) EasyLugg_Booking_Plugin::with_language(
+			isset( $row->lang ) ? $row->lang : '',
+			function () use ( $row ) {
+				$plugin  = EasyLugg_Dashboard::plugin();
+				$storage = 'ST' === $row->corridor;
+				$subject = sprintf( $plugin->text( 'email.subject_received' ), $row->booking_code );
+				$message = sprintf(
+					$plugin->text( $storage ? 'email.body_received_storage' : 'email.body_received' ),
+					$plugin->status_label( $row->status ),
+					$row->booking_code,
+					number_format_i18n( (int) $row->price_total ),
+					EasyLugg_Dashboard::tracking_url( $row )
+				);
+				return wp_mail( $row->customer_email, $subject, $message, array( 'Content-Type: text/plain; charset=UTF-8' ) );
+			}
 		);
-		return (bool) wp_mail( $row->customer_email, $subject, $message, array( 'Content-Type: text/plain; charset=UTF-8' ) );
 	}
 
 	// ---- Status transitions (OPS) -----------------------------------------

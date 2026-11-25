@@ -7,6 +7,7 @@
  * Requires PHP: 7.4
  * Author: EasyLugg
  * Text Domain: easylugg-booking
+ * Domain Path: /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +26,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-accounts.php';
 final class EasyLugg_Booking_Plugin {
 	const VERSION       = '1.0.1';
 	const PRICES_OPTION = 'easylugg_booking_prices';
-	const DB_VERSION    = '2';
+	const DB_VERSION    = '3';
 	const DB_OPTION     = 'easylugg_booking_db_version';
 	const NONCE_ACTION  = 'easylugg_booking_submit';
 	const SHOW_TRUST_BADGES = false; // 'Live GPS tracking' + 'Tamper-proof Zip' — hidden until the team activates them.
@@ -121,6 +122,7 @@ final class EasyLugg_Booking_Plugin {
 			needs_review tinyint(1) NOT NULL DEFAULT 0,
 			row_version int unsigned NOT NULL DEFAULT 0,
 			updated_at datetime NULL DEFAULT NULL,
+			lang varchar(10) NOT NULL DEFAULT '',
 			PRIMARY KEY  (booking_code),
 			UNIQUE KEY request_key (request_key),
 			UNIQUE KEY invoice_no (invoice_no),
@@ -141,6 +143,73 @@ final class EasyLugg_Booking_Plugin {
 	 */
 	public function load_textdomain() {
 		load_plugin_textdomain( 'easylugg-booking', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+
+	/**
+	 * Current WPML language code, or '' when WPML is not active.
+	 *
+	 * @return string
+	 */
+	public static function current_lang() {
+		$lang = apply_filters( 'wpml_current_language', null );
+		return is_string( $lang ) ? $lang : '';
+	}
+
+	/**
+	 * Run a callback in a WPML language (a booking's stored language; the
+	 * default language when empty). Without WPML the callback just runs.
+	 *
+	 * @param string   $lang     WPML language code, may be empty.
+	 * @param callable $callback Callback.
+	 * @return mixed
+	 */
+	public static function with_language( $lang, $callback ) {
+		$lang = '' !== (string) $lang ? (string) $lang : apply_filters( 'wpml_default_language', null );
+		$prev = self::current_lang();
+		if ( ! is_string( $lang ) || '' === $lang || '' === $prev || $lang === $prev ) {
+			return call_user_func( $callback );
+		}
+		do_action( 'wpml_switch_language', $lang );
+		try {
+			return call_user_func( $callback );
+		} finally {
+			do_action( 'wpml_switch_language', $prev );
+		}
+	}
+
+	/**
+	 * URL of the tracking page ("bookings"), in the given WPML language
+	 * (current language when empty). Without WPML it is the plain page URL.
+	 *
+	 * @param string $lang WPML language code, optional.
+	 * @return string
+	 */
+	public static function tracking_page_url( $lang = '' ) {
+		$page = get_page_by_path( 'bookings' );
+		if ( ! $page ) {
+			return home_url( '/bookings/' );
+		}
+		$lang = '' !== $lang ? $lang : self::current_lang();
+		$id   = '' !== $lang ? apply_filters( 'wpml_object_id', $page->ID, 'page', true, $lang ) : $page->ID;
+		return get_permalink( $id ? $id : $page->ID );
+	}
+
+	/**
+	 * True on the tracking page or any WPML translation of it.
+	 *
+	 * @return bool
+	 */
+	private function is_bookings_page() {
+		if ( is_page( 'bookings' ) ) {
+			return true;
+		}
+		$page = get_page_by_path( 'bookings' );
+		if ( ! $page ) {
+			return false;
+		}
+		$default = apply_filters( 'wpml_default_language', null );
+		$source  = is_string( $default ) ? apply_filters( 'wpml_object_id', get_queried_object_id(), 'page', false, $default ) : 0;
+		return $source && (int) $source === (int) $page->ID;
 	}
 
 	/**
@@ -226,15 +295,17 @@ final class EasyLugg_Booking_Plugin {
 	 * @return array<string, array<string, string>>
 	 */
 	public function texts() {
-		static $texts = null;
-		if ( null === $texts ) {
+		// Cached per language: emails switch language mid-request (see with_language()).
+		static $cache = array();
+		$lang = self::current_lang();
+		if ( ! isset( $cache[ $lang ] ) ) {
 			$texts = include plugin_dir_path( __FILE__ ) . 'texts.php';
 			if ( ! is_array( $texts ) ) {
 				$texts = array();
 			}
-			$texts = EasyLugg_Dashboard_Config::apply_hub_texts( $texts );
+			$cache[ $lang ] = EasyLugg_Dashboard_Config::apply_hub_texts( $texts );
 		}
-		return $texts;
+		return $cache[ $lang ];
 	}
 
 	/**
@@ -354,7 +425,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @return void
 	 */
 	public function disable_booking_page_cache() {
-		if ( is_page( 'bookings' ) || is_page( 'dashboard' ) || $this->is_dashboard_request() ) {
+		if ( $this->is_bookings_page() || is_page( 'dashboard' ) || $this->is_dashboard_request() ) {
 			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 				define( 'DONOTCACHEPAGE', true );
 			}
@@ -672,7 +743,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! is_page( 'bookings' ) && ! $this->page_has_booking_shortcode() ) {
+		if ( ! $this->is_bookings_page() && ! $this->page_has_booking_shortcode() ) {
 			return;
 		}
 		// The Dashboard loads its own assets (includes/dashboard.php); the
@@ -717,7 +788,8 @@ final class EasyLugg_Booking_Plugin {
 			'easylugg-booking',
 			'EasyLuggBooking',
 			array(
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				// "lang" lets WPML resolve the page language on admin-ajax (error messages, lookup HTML).
+				'ajaxUrl' => '' !== self::current_lang() ? add_query_arg( 'lang', self::current_lang(), admin_url( 'admin-ajax.php' ) ) : admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( self::NONCE_ACTION ),
 				'prices'  => $this->prices(),
 				'hotels'  => $this->mock_hotels(),
@@ -925,7 +997,7 @@ final class EasyLugg_Booking_Plugin {
 										<div class="el-bag-counter">
 											<div class="el-bag-head"><span class="el-bag-name"><?php echo esc_html( $meta['name'] ); ?></span><?php echo $this->icon( $meta['icon'] ); ?></div>
 											<p class="el-bag-desc"><?php echo esc_html( $meta['desc'] ); ?></p>
-											<div class="el-bag-price"><?php echo esc_html( number_format( (int) ( $bag_prices[ $size ] ?? 0 ) ) . ' VND / ' . $this->text( 'step1.bag_unit' ) ); ?></div>
+											<div class="el-bag-price"><?php echo esc_html( sprintf( $this->text( 'step1.bag_price' ), number_format( (int) ( $bag_prices[ $size ] ?? 0 ) ), $this->text( 'step1.bag_unit' ) ) ); ?></div>
 											<div class="el-bag-stepper">
 												<button type="button" class="el-bag-btn el-bag-minus" data-bag-step="<?php echo esc_attr( $size ); ?>|-1" aria-label="<?php echo esc_attr( sprintf( $this->text( 'step1.bag_decrease' ), $meta['name'] ) ); ?>"><?php echo $this->icon( 'remove' ); ?></button>
 												<input id="el-bags-<?php echo esc_attr( $size ); ?>" name="bags[<?php echo esc_attr( $size ); ?>]" type="number" min="0" max="20" step="1" value="0" inputmode="numeric" aria-label="<?php echo esc_attr( $meta['name'] ); ?>">
@@ -1183,7 +1255,7 @@ final class EasyLugg_Booking_Plugin {
 	 * @return string
 	 */
 	private function format_vnd( $amount ) {
-		return number_format( (int) $amount, 0, '.', ',' ) . ' VND';
+		return sprintf( $this->text( 'summary.price_vnd' ), number_format( (int) $amount, 0, '.', ',' ) );
 	}
 
 	/**
@@ -1645,8 +1717,9 @@ final class EasyLugg_Booking_Plugin {
 				'customer_name'       => $customer['name'],
 				'booking_data'        => wp_json_encode( $booking_data ),
 				'photo_path'          => is_string( $photo_path ) ? $photo_path : '',
+				'lang'                => self::current_lang(),
 			),
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s' )
 		);
 
 		if ( false === $inserted ) {
@@ -2288,13 +2361,12 @@ final class EasyLugg_Booking_Plugin {
 			wp_send_json_error( array( 'message' => $this->text( 'validation.verify_failed' ) ), 500 );
 		}
 
-		$page       = get_page_by_path( 'bookings' );
 		$tracking_url = add_query_arg(
 			array(
 				'el_track' => $booking->booking_code,
 				'el_token' => $token,
 			),
-			$page ? get_permalink( $page ) : home_url( '/bookings/' )
+			self::tracking_page_url()
 		);
 		$notice = '';
 		if ( ! $duplicate ) {
@@ -2323,7 +2395,7 @@ final class EasyLugg_Booking_Plugin {
 				'booking_code' => $booking->booking_code,
 				'status'       => $booking->status,
 				'status_label' => $this->status_label( $booking->status ),
-				'price'        => number_format_i18n( (int) $booking->price_total ) . ' VND',
+				'price'        => sprintf( $this->text( 'summary.price_vnd' ), number_format_i18n( (int) $booking->price_total ) ),
 				'tracking_url' => esc_url_raw( $tracking_url ),
 				'email_sent'   => (bool) $email_sent,
 				'notice'       => $notice,

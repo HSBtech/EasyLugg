@@ -9,6 +9,7 @@
 return array(
 	'nav' => array(
 		'title'        => __( 'EasyLugg Dashboard', 'easylugg-booking' ),
+		'aria'         => __( 'Dashboard', 'easylugg-booking' ),
 		'open'         => __( 'Open work', 'easylugg-booking' ),
 		'close'        => __( 'Awaiting close-out', 'easylugg-booking' ),
 		'day'          => __( 'By date', 'easylugg-booking' ),
