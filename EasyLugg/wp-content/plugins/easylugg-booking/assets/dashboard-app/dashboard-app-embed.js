@@ -1,13 +1,13 @@
 'use strict';
 
-/* Dashboard 2 — presentation layer for the hosted Dashboard 1 screens
+/* Dashboard — presentation layer for the hosted dashboard screens
    (Create a booking, Settings). It only adds markup around the existing
    fields (section headings, segmented controls, steppers, section index);
    field names, validation and saving stay in booking-dashboard.js. */
 (function () {
-	var cfg = window.EasyLuggD2Embed || {};
+	var cfg = window.EasyLuggAppEmbed || {};
 	var L = cfg.labels || {};
-	var wrap = document.querySelector('.eld2-embed');
+	var wrap = document.querySelector('.elapp-embed');
 	if (!wrap) { return; }
 	var screen = wrap.getAttribute('data-screen');
 
@@ -25,14 +25,14 @@
 
 	/* A <select> shown as a segmented control; the select stays in the DOM. */
 	function segment(select) {
-		if (!select || select.getAttribute('data-d2-seg')) { return; }
-		select.setAttribute('data-d2-seg', '1');
-		var seg = el('div', 'eld2-seg');
+		if (!select || select.getAttribute('data-app-seg')) { return; }
+		select.setAttribute('data-app-seg', '1');
+		var seg = el('div', 'elapp-seg');
 		seg.setAttribute('role', 'group');
 		var buttons = [];
 		Array.prototype.forEach.call(select.options, function (opt) {
 			if (opt.value === '') { return; }
-			var b = el('button', 'eld2-seg-btn', opt.textContent);
+			var b = el('button', 'elapp-seg-btn', opt.textContent);
 			b.type = 'button';
 			b.setAttribute('data-value', opt.value);
 			b.addEventListener('click', function () {
@@ -50,18 +50,18 @@
 			});
 		}
 		select.addEventListener('change', sync);
-		select.classList.add('eld2-visually-hidden');
+		select.classList.add('elapp-visually-hidden');
 		select.parentNode.appendChild(seg);
 		sync();
 	}
 
 	/* Number input with - / + buttons. */
 	function stepper(input) {
-		if (input.getAttribute('data-d2-step')) { return; }
-		input.setAttribute('data-d2-step', '1');
-		var box = el('span', 'eld2-step');
-		var minus = el('button', 'eld2-step-btn', '−');
-		var plus = el('button', 'eld2-step-btn', '+');
+		if (input.getAttribute('data-app-step')) { return; }
+		input.setAttribute('data-app-step', '1');
+		var box = el('span', 'elapp-step');
+		var minus = el('button', 'elapp-step-btn', '−');
+		var plus = el('button', 'elapp-step-btn', '+');
 		minus.type = plus.type = 'button';
 		minus.setAttribute('aria-label', L.minus || '-');
 		plus.setAttribute('aria-label', L.plus || '+');
@@ -82,7 +82,7 @@
 
 	function heading(text, before, routes) {
 		if (!before) { return; }
-		var h = el('h4', 'eld2-sec-title', text);
+		var h = el('h4', 'elapp-sec-title', text);
 		if (routes) { h.setAttribute('data-routes', routes); }
 		before.parentNode.insertBefore(h, before);
 	}
@@ -91,7 +91,7 @@
 		var form = wrap.querySelector('form[data-action="easylugg_dashboard_create"]');
 		if (!form) { return; }
 		var title = form.parentNode.querySelector('h3');
-		if (title) { title.classList.add('eld2-hide'); }
+		if (title) { title.classList.add('elapp-hide'); }
 
 		segment(form.querySelector('[data-eld-route]'));
 		segment(form.querySelector('[data-eld-source]'));
@@ -111,10 +111,10 @@
 
 		var submit = form.querySelector('button[type="submit"]');
 		if (submit) {
-			var bar = el('div', 'eld2-bar-foot');
+			var bar = el('div', 'elapp-bar-foot');
 			var note = form.querySelector(':scope > p');
 			if (note) { bar.appendChild(note); }
-			var cancel = el('a', 'eld-btn eld2-cancel', L.cancel);
+			var cancel = el('a', 'eld-btn elapp-cancel', L.cancel);
 			cancel.href = cfg.home || '#';
 			bar.appendChild(cancel);
 			bar.appendChild(submit);
@@ -125,12 +125,12 @@
 	function initConfig() {
 		var cards = wrap.querySelectorAll('section.eld-card');
 		if (!cards.length) { return; }
-		var nav = el('nav', 'eld2-index');
+		var nav = el('nav', 'elapp-index');
 		nav.setAttribute('aria-label', L.sections || '');
 		Array.prototype.forEach.call(cards, function (card, i) {
 			var h = card.querySelector('h4, h3');
 			if (!h) { return; }
-			card.id = card.id || 'eld2-sec-' + i;
+			card.id = card.id || 'elapp-sec-' + i;
 			var a = el('a', '', h.textContent);
 			a.href = '#' + card.id;
 			a.addEventListener('click', function (e) {
@@ -140,7 +140,7 @@
 			nav.appendChild(a);
 		});
 		var host = wrap.querySelector('#eld');
-		if (host) { host.insertBefore(nav, host.firstChild); host.classList.add('eld2-config'); }
+		if (host) { host.insertBefore(nav, host.firstChild); host.classList.add('elapp-config'); }
 	}
 
 	if (screen === 'create') { initCreate(); }

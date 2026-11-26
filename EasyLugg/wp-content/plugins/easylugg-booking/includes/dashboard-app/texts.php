@@ -1,10 +1,9 @@
 <?php
 /**
- * Dashboard 2 user-facing strings (source language: English).
+ * Dashboard user-facing strings (source language: English).
  *
  * Every string goes through __() with the 'easylugg-booking' domain.
- * D2-08: the Vietnamese translation for staff comes after Phase 1A.
- * D2-01 only needs the frame strings (header, menu, gate, disabled).
+ * Korean and Vietnamese translations are added through WPML String Translation.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,11 +24,11 @@ return array(
 		'dashboard' => __( 'Dashboard', 'easylugg-booking' ),
 		'bookings'  => __( 'Bookings', 'easylugg-booking' ),
 		'settings'  => __( 'Settings', 'easylugg-booking' ),
-		'aria'      => __( 'Dashboard 2 menu', 'easylugg-booking' ),
+		'aria'      => __( 'Dashboard menu', 'easylugg-booking' ),
 	),
 	'gate'     => array(
 		'login_title'   => __( 'Sign in', 'easylugg-booking' ),
-		'login_text'    => __( 'Sign in to view Dashboard 2.', 'easylugg-booking' ),
+		'login_text'    => __( 'Sign in to view the dashboard.', 'easylugg-booking' ),
 		'locked'        => __( 'This account is locked. Please contact your administrator.', 'easylugg-booking' ),
 		'no_permission' => __( 'You do not have permission to view this dashboard.', 'easylugg-booking' ),
 		'logout'        => __( 'Log out', 'easylugg-booking' ),
@@ -167,8 +166,5 @@ return array(
 		'title'    => __( 'Settings', 'easylugg-booking' ),
 		'subtitle' => __( 'Prices, hours, capacity and hub information', 'easylugg-booking' ),
 		'sections' => __( 'Sections', 'easylugg-booking' ),
-	),
-	'disabled' => array(
-		'message' => __( 'Dashboard 2 is temporarily disabled.', 'easylugg-booking' ),
 	),
 );

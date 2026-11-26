@@ -22,8 +22,8 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-setup.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-config.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-accounts.php';
-// Dashboard 2 (SRS: EasyLugg-Dashboard2-SRS-v1.0-DRAFT.md). One touchpoint (D2-09).
-require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard2/bootstrap.php';
+// Dashboard interface (includes/dashboard-app). One touchpoint.
+require_once plugin_dir_path( __FILE__ ) . 'includes/dashboard-app/bootstrap.php';
 
 final class EasyLugg_Booking_Plugin {
 	const VERSION       = '1.0.1';

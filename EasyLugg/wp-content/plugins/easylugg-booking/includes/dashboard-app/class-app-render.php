@@ -1,20 +1,20 @@
 <?php
 /**
- * Dashboard 2 HTML blocks. Everything is escaped here; JS only swaps regions.
+ * Dashboard HTML blocks. Everything is escaped here; JS only swaps regions.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class EasyLugg_D2_Render {
+class EasyLugg_App_Render {
 
 	/**
 	 * @param string $key Text key.
 	 * @return string
 	 */
 	private static function t( $key ) {
-		return EasyLugg_D2::t( $key );
+		return EasyLugg_App::t( $key );
 	}
 
 	/**
@@ -41,7 +41,7 @@ class EasyLugg_D2_Render {
 	 * @return string
 	 */
 	private static function status_pill( $status ) {
-		return '<span class="eld2-pill is-' . esc_attr( EasyLugg_D2_Metrics::group_of( $status ) . ' s-' . sanitize_html_class( $status ) ) . '">' . esc_html( self::plugin()->status_label( $status ) ) . '</span>';
+		return '<span class="elapp-pill is-' . esc_attr( EasyLugg_App_Metrics::group_of( $status ) . ' s-' . sanitize_html_class( $status ) ) . '">' . esc_html( self::plugin()->status_label( $status ) ) . '</span>';
 	}
 
 	/**
@@ -52,11 +52,11 @@ class EasyLugg_D2_Render {
 	public static function kpi( $today, $yesterday ) {
 		$total = $today['total'];
 		$tiles = array(
-			array( 'today', $total, EasyLugg_D2_Metrics::delta( $total, $yesterday ), true ),
-			array( 'transit', EasyLugg_D2_Metrics::group_count( $today['by_status'], 'transit' ), null, false ),
-			array( 'delivered', EasyLugg_D2_Metrics::group_count( $today['by_status'], 'delivered' ), null, false ),
+			array( 'today', $total, EasyLugg_App_Metrics::delta( $total, $yesterday ), true ),
+			array( 'transit', EasyLugg_App_Metrics::group_count( $today['by_status'], 'transit' ), null, false ),
+			array( 'delivered', EasyLugg_App_Metrics::group_count( $today['by_status'], 'delivered' ), null, false ),
 			array( 'exception', $today['exception'], null, false ),
-			array( 'pending', EasyLugg_D2_Metrics::group_count( $today['by_status'], 'pickup' ), null, false ),
+			array( 'pending', EasyLugg_App_Metrics::group_count( $today['by_status'], 'pickup' ), null, false ),
 		);
 		$html = '';
 		foreach ( $tiles as $tile ) {
@@ -65,15 +65,15 @@ class EasyLugg_D2_Render {
 				$sub = null === $delta ? '—' : ( $delta >= 0 ? '▲ ' : '▼ ' ) . abs( $delta ) . '%';
 				$bad = null !== $delta && $delta < 0;
 			} else {
-				$pct = EasyLugg_D2_Metrics::percent( $value, $total );
+				$pct = EasyLugg_App_Metrics::percent( $value, $total );
 				$sub = null === $pct ? '—' : $pct . '%';
 				$bad = 'exception' === $key && $value > 0;
 			}
-			$html .= '<div class="eld2-kpi-tile"><div class="eld2-kpi-top"><span class="eld2-kpi-label">' . esc_html( self::t( 'kpi.' . $key ) ) . '</span></div>'
-				. '<div class="eld2-kpi-bottom"><span class="eld2-kpi-value">' . (int) $value . '</span><span class="eld2-kpi-delta' . ( $bad ? ' bad' : '' ) . '">' . esc_html( $sub ) . '</span></div></div>';
+			$html .= '<div class="elapp-kpi-tile"><div class="elapp-kpi-top"><span class="elapp-kpi-label">' . esc_html( self::t( 'kpi.' . $key ) ) . '</span></div>'
+				. '<div class="elapp-kpi-bottom"><span class="elapp-kpi-value">' . (int) $value . '</span><span class="elapp-kpi-delta' . ( $bad ? ' bad' : '' ) . '">' . esc_html( $sub ) . '</span></div></div>';
 		}
-		$html .= '<div class="eld2-kpi-tile"><div class="eld2-kpi-top"><span class="eld2-kpi-label">' . esc_html( self::t( 'kpi.updated' ) ) . '</span><span class="eld2-live" id="eld2-live">' . esc_html( self::t( 'kpi.live' ) ) . '</span></div>'
-			. '<div class="eld2-kpi-bottom"><span class="eld2-kpi-value">' . esc_html( wp_date( 'H:i' ) ) . '</span><span class="eld2-kpi-delta">' . esc_html( wp_date( 'd/m' ) ) . '</span></div></div>';
+		$html .= '<div class="elapp-kpi-tile"><div class="elapp-kpi-top"><span class="elapp-kpi-label">' . esc_html( self::t( 'kpi.updated' ) ) . '</span><span class="elapp-live" id="elapp-live">' . esc_html( self::t( 'kpi.live' ) ) . '</span></div>'
+			. '<div class="elapp-kpi-bottom"><span class="elapp-kpi-value">' . esc_html( wp_date( 'H:i' ) ) . '</span><span class="elapp-kpi-delta">' . esc_html( wp_date( 'd/m' ) ) . '</span></div></div>';
 		return $html;
 	}
 
@@ -88,35 +88,35 @@ class EasyLugg_D2_Render {
 		$searching = '' !== $f['q'];
 		ob_start();
 		?>
-		<div class="eld2-card-head">
+		<div class="elapp-card-head">
 			<h2><?php echo esc_html( self::t( 'list.title' ) ); ?></h2>
 			<?php if ( current_user_can( 'easylugg_create_booking' ) ) : ?>
-				<a class="eld2-btn" href="<?php echo esc_url( EasyLugg_D2::page_url( array( 'tab' => 'create' ) ) ); ?>"><?php echo esc_html( self::t( 'list.new' ) ); ?></a>
+				<a class="elapp-btn" href="<?php echo esc_url( EasyLugg_App::page_url( array( 'tab' => 'create' ) ) ); ?>"><?php echo esc_html( self::t( 'list.new' ) ); ?></a>
 			<?php endif; ?>
 		</div>
 		<?php if ( $searching ) : ?>
-			<div class="eld2-bar"><span>“<?php echo esc_html( $f['q'] ); ?>”</span> <button type="button" class="eld2-link" data-d2-clear><?php echo esc_html( self::t( 'list.clear_search' ) ); ?></button></div>
+			<div class="elapp-bar"><span>“<?php echo esc_html( $f['q'] ); ?>”</span> <button type="button" class="elapp-link" data-app-clear><?php echo esc_html( self::t( 'list.clear_search' ) ); ?></button></div>
 		<?php else : ?>
-			<div class="eld2-bar">
-				<label class="eld2-dl"><?php echo esc_html( self::t( 'list.from' ) ); ?>
-					<input type="date" class="eld2-date" value="<?php echo esc_attr( $f['from'] ); ?>" max="<?php echo esc_attr( $f['to'] ); ?>" data-d2-from></label>
-				<label class="eld2-dl"><?php echo esc_html( self::t( 'list.to' ) ); ?>
-					<input type="date" class="eld2-date" value="<?php echo esc_attr( $f['to'] ); ?>" min="<?php echo esc_attr( $f['from'] ); ?>" data-d2-to></label>
-				<span class="eld2-chips">
-					<button type="button" class="eld2-chip<?php echo '' === $f['corridor'] ? ' is-on' : ''; ?>" data-d2-corridor=""><?php echo esc_html( self::t( 'list.all_routes' ) ); ?></button>
+			<div class="elapp-bar">
+				<label class="elapp-dl"><?php echo esc_html( self::t( 'list.from' ) ); ?>
+					<input type="date" class="elapp-date" value="<?php echo esc_attr( $f['from'] ); ?>" max="<?php echo esc_attr( $f['to'] ); ?>" data-app-from></label>
+				<label class="elapp-dl"><?php echo esc_html( self::t( 'list.to' ) ); ?>
+					<input type="date" class="elapp-date" value="<?php echo esc_attr( $f['to'] ); ?>" min="<?php echo esc_attr( $f['from'] ); ?>" data-app-to></label>
+				<span class="elapp-chips">
+					<button type="button" class="elapp-chip<?php echo '' === $f['corridor'] ? ' is-on' : ''; ?>" data-app-corridor=""><?php echo esc_html( self::t( 'list.all_routes' ) ); ?></button>
 					<?php foreach ( array( 'AH', 'HA', 'HH', 'ST' ) as $c ) : ?>
-						<button type="button" class="eld2-chip<?php echo $c === $f['corridor'] ? ' is-on' : ''; ?>" data-d2-corridor="<?php echo esc_attr( $c ); ?>"><?php echo esc_html( $c ); ?></button>
+						<button type="button" class="elapp-chip<?php echo $c === $f['corridor'] ? ' is-on' : ''; ?>" data-app-corridor="<?php echo esc_attr( $c ); ?>"><?php echo esc_html( $c ); ?></button>
 					<?php endforeach; ?>
 				</span>
 			</div>
-			<div class="eld2-tabs" role="tablist">
+			<div class="elapp-tabs" role="tablist">
 				<?php foreach ( array( 'all', 'pickup', 'transit', 'delivered', 'exception' ) as $tab ) : ?>
-					<button type="button" role="tab" class="eld2-tab<?php echo $tab === $f['tab'] ? ' is-on' : ''; ?>" data-d2-tab="<?php echo esc_attr( $tab ); ?>"><?php echo esc_html( self::t( 'list.tab_' . $tab ) ); ?> <span class="eld2-count"><?php echo (int) $tabs[ $tab ]; ?></span></button>
+					<button type="button" role="tab" class="elapp-tab<?php echo $tab === $f['tab'] ? ' is-on' : ''; ?>" data-app-tab="<?php echo esc_attr( $tab ); ?>"><?php echo esc_html( self::t( 'list.tab_' . $tab ) ); ?> <span class="elapp-count"><?php echo (int) $tabs[ $tab ]; ?></span></button>
 				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>
-		<div class="eld2-table-wrap">
-		<table class="eld2-table">
+		<div class="elapp-table-wrap">
+		<table class="elapp-table">
 			<thead><tr>
 				<th><?php echo esc_html( self::t( 'list.col_id' ) ); ?></th>
 				<th><?php echo esc_html( self::t( 'list.col_service' ) ); ?></th>
@@ -125,12 +125,12 @@ class EasyLugg_D2_Render {
 			</tr></thead>
 			<tbody>
 			<?php if ( ! $result['rows'] ) : ?>
-				<tr><td colspan="4" class="eld2-empty"><?php echo esc_html( self::t( 'list.empty' ) ); ?></td></tr>
+				<tr><td colspan="4" class="elapp-empty"><?php echo esc_html( self::t( 'list.empty' ) ); ?></td></tr>
 			<?php endif; ?>
 			<?php foreach ( $result['rows'] as $row ) : ?>
 				<?php $bags = EasyLugg_Dashboard::bag_total( EasyLugg_Dashboard::decode( $row->booking_data ) ); ?>
-				<tr class="eld2-row<?php echo $row->booking_code === $code ? ' is-selected' : ''; ?>" data-d2-code="<?php echo esc_attr( $row->booking_code ); ?>" tabindex="0">
-					<td><?php echo (int) $row->is_exc ? '<span class="eld2-dot" title="' . esc_attr( self::t( 'list.exception_dot' ) ) . '"></span>' : ''; ?><?php echo esc_html( $row->booking_code ); ?></td>
+				<tr class="elapp-row<?php echo $row->booking_code === $code ? ' is-selected' : ''; ?>" data-app-code="<?php echo esc_attr( $row->booking_code ); ?>" tabindex="0">
+					<td><?php echo (int) $row->is_exc ? '<span class="elapp-dot" title="' . esc_attr( self::t( 'list.exception_dot' ) ) . '"></span>' : ''; ?><?php echo esc_html( $row->booking_code ); ?></td>
 					<td><?php echo esc_html( self::plugin()->corridor_label( $row->corridor ) ); ?></td>
 					<td><?php echo (int) $bags; ?></td>
 					<td><?php echo self::status_pill( $row->status ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
@@ -140,14 +140,14 @@ class EasyLugg_D2_Render {
 		</table>
 		</div>
 		<?php
-		$from = $result['total'] ? ( $result['page'] - 1 ) * EasyLugg_D2_Data::PER_PAGE + 1 : 0;
+		$from = $result['total'] ? ( $result['page'] - 1 ) * EasyLugg_App_Data::PER_PAGE + 1 : 0;
 		$to   = $result['total'] ? $from + count( $result['rows'] ) - 1 : 0;
 		?>
-		<div class="eld2-foot">
+		<div class="elapp-foot">
 			<span><?php echo esc_html( sprintf( self::t( 'list.showing' ), $from, $to, $result['total'] ) ); ?></span>
 			<span>
-				<button type="button" class="eld2-chip" data-d2-page="<?php echo (int) $result['page'] - 1; ?>" <?php disabled( $result['page'] <= 1 ); ?>><?php echo esc_html( self::t( 'list.prev' ) ); ?></button>
-				<button type="button" class="eld2-chip" data-d2-page="<?php echo (int) $result['page'] + 1; ?>" <?php disabled( $result['page'] >= $result['pages'] ); ?>><?php echo esc_html( self::t( 'list.next' ) ); ?></button>
+				<button type="button" class="elapp-chip" data-app-page="<?php echo (int) $result['page'] - 1; ?>" <?php disabled( $result['page'] <= 1 ); ?>><?php echo esc_html( self::t( 'list.prev' ) ); ?></button>
+				<button type="button" class="elapp-chip" data-app-page="<?php echo (int) $result['page'] + 1; ?>" <?php disabled( $result['page'] >= $result['pages'] ); ?>><?php echo esc_html( self::t( 'list.next' ) ); ?></button>
 			</span>
 		</div>
 		<?php
@@ -158,14 +158,14 @@ class EasyLugg_D2_Render {
 	 * @return string
 	 */
 	public static function detail_empty() {
-		return '<p class="eld2-muted eld2-pad">' . esc_html( self::t( 'detail.pick' ) ) . '</p>';
+		return '<p class="elapp-muted elapp-pad">' . esc_html( self::t( 'detail.pick' ) ) . '</p>';
 	}
 
 	/**
 	 * @return string
 	 */
 	public static function detail_missing() {
-		return '<p class="eld2-muted eld2-pad">' . esc_html( self::t( 'detail.not_found' ) ) . '</p>';
+		return '<p class="elapp-muted elapp-pad">' . esc_html( self::t( 'detail.not_found' ) ) . '</p>';
 	}
 
 	/**
@@ -174,7 +174,7 @@ class EasyLugg_D2_Render {
 	 * @return string
 	 */
 	private static function section( $title, $rows ) {
-		$html = '<section class="eld2-sec"><h3>' . esc_html( $title ) . '</h3><dl class="eld2-kv">';
+		$html = '<section class="elapp-sec"><h3>' . esc_html( $title ) . '</h3><dl class="elapp-kv">';
 		foreach ( $rows as $label => $value ) {
 			$html .= '<dt>' . esc_html( $label ) . '</dt><dd>' . $value . '</dd>';
 		}
@@ -219,7 +219,7 @@ class EasyLugg_D2_Render {
 				$tag = (string) $meta['tag_code'];
 			}
 			if ( 'status_change' === $event->action ) {
-				$handled = EasyLugg_D2_Data::actor( $event->actor_id );
+				$handled = EasyLugg_App_Data::actor( $event->actor_id );
 				if ( 'collected' === $event->to_status && '' === $actual ) {
 					$actual = self::local( $event->created_at, 'd/m H:i' );
 				}
@@ -238,22 +238,22 @@ class EasyLugg_D2_Render {
 		list( $pick, $drop ) = isset( $map[ $row->corridor ] ) ? $map[ $row->corridor ] : array( '', '' );
 		$when = EasyLugg_Dashboard::first_time( $row->corridor, $data );
 
-		$d1_view = EasyLugg_D2::page_url( array( 'view' => $row->booking_code ) );
+		$d1_view = EasyLugg_App::page_url( array( 'view' => $row->booking_code ) );
 		ob_start();
 		?>
-		<div class="eld2-card-head">
+		<div class="elapp-card-head">
 			<h2><?php echo esc_html( self::t( 'detail.booking' ) . ' #' . $row->booking_code ); ?></h2>
 			<?php echo self::status_pill( $row->status ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</div>
-		<div class="eld2-actions">
-			<a class="eld2-btn" href="<?php echo esc_url( $d1_view ); ?>"><?php echo esc_html( self::t( 'detail.open_d1' ) ); ?></a>
+		<div class="elapp-actions">
+			<a class="elapp-btn" href="<?php echo esc_url( $d1_view ); ?>"><?php echo esc_html( self::t( 'detail.open_d1' ) ); ?></a>
 			<?php if ( current_user_can( 'easylugg_edit_booking' ) && in_array( EasyLugg_Dashboard_Rules::edit_mode( $row->status ), array( 'full', 'contact' ), true ) ) : ?>
-				<a class="eld2-btn" href="<?php echo esc_url( EasyLugg_D2::page_url( array( 'edit' => $row->booking_code ) ) ); ?>"><?php echo esc_html( self::t( 'detail.edit' ) ); ?></a>
+				<a class="elapp-btn" href="<?php echo esc_url( EasyLugg_App::page_url( array( 'edit' => $row->booking_code ) ) ); ?>"><?php echo esc_html( self::t( 'detail.edit' ) ); ?></a>
 			<?php endif; ?>
 			<?php if ( $phone ) : ?>
-				<a class="eld2-btn" href="<?php echo esc_url( 'tel:' . $phone, array( 'tel' ) ); ?>"><?php echo esc_html( self::t( 'detail.call' ) ); ?></a>
+				<a class="elapp-btn" href="<?php echo esc_url( 'tel:' . $phone, array( 'tel' ) ); ?>"><?php echo esc_html( self::t( 'detail.call' ) ); ?></a>
 			<?php endif; ?>
-			<a class="eld2-btn" href="<?php echo esc_url( 'mailto:' . $row->customer_email, array( 'mailto' ) ); ?>"><?php echo esc_html( self::t( 'detail.email' ) ); ?></a>
+			<a class="elapp-btn" href="<?php echo esc_url( 'mailto:' . $row->customer_email, array( 'mailto' ) ); ?>"><?php echo esc_html( self::t( 'detail.email' ) ); ?></a>
 		</div>
 		<?php
 		echo self::section( // phpcs:ignore WordPress.Security.EscapeOutput
@@ -308,7 +308,7 @@ class EasyLugg_D2_Render {
 	public static function tracking( $d ) {
 		$items = array();
 		foreach ( $d['events'] as $event ) {
-			$what = isset( EasyLugg_D2::texts()['audit'][ $event->action ] ) ? self::t( 'audit.' . $event->action ) : self::t( 'audit.other' );
+			$what = isset( EasyLugg_App::texts()['audit'][ $event->action ] ) ? self::t( 'audit.' . $event->action ) : self::t( 'audit.other' );
 			if ( $event->to_status ) {
 				$what .= ': ' . self::plugin()->status_label( $event->to_status );
 			}
@@ -318,21 +318,21 @@ class EasyLugg_D2_Render {
 			$items[ strtotime( $photo->created_at . ' UTC' ) . '-p' . $i ] = array( $photo->created_at, self::t( 'tl.photo' ), '' );
 		}
 		ksort( $items );
-		$html  = '<div class="eld2-card"><div class="eld2-card-head"><h2>' . esc_html( self::t( 'tl.title' ) ) . '</h2></div><ol class="eld2-timeline">';
+		$html  = '<div class="elapp-card"><div class="elapp-card-head"><h2>' . esc_html( self::t( 'tl.title' ) ) . '</h2></div><ol class="elapp-timeline">';
 		$last  = count( $items ) - 1;
 		$index = 0;
 		foreach ( $items as $item ) {
-			$html .= '<li' . ( $index === $last ? ' class="is-now"' : '' ) . '><span class="eld2-time">' . esc_html( self::local( $item[0] ) ) . '</span><span class="eld2-ev"><strong>' . esc_html( $item[1] ) . '</strong>' . ( '' !== $item[2] ? '<br><small>' . esc_html( $item[2] ) . '</small>' : '' ) . '</span></li>';
+			$html .= '<li' . ( $index === $last ? ' class="is-now"' : '' ) . '><span class="elapp-time">' . esc_html( self::local( $item[0] ) ) . '</span><span class="elapp-ev"><strong>' . esc_html( $item[1] ) . '</strong>' . ( '' !== $item[2] ? '<br><small>' . esc_html( $item[2] ) . '</small>' : '' ) . '</span></li>';
 			++$index;
 		}
 		if ( ! $items ) {
-			$html .= '<li class="eld2-muted">' . esc_html( self::t( 'tl.empty' ) ) . '</li>';
+			$html .= '<li class="elapp-muted">' . esc_html( self::t( 'tl.empty' ) ) . '</li>';
 		}
 		$html .= '</ol></div>';
 
-		$html .= '<div class="eld2-card eld2-exc' . ( $d['reasons'] ? ' has-exc' : '' ) . '"><div class="eld2-card-head"><h2>' . esc_html( self::t( 'tl.exc_title' ) ) . '</h2></div><div class="eld2-pad">';
+		$html .= '<div class="elapp-card elapp-exc' . ( $d['reasons'] ? ' has-exc' : '' ) . '"><div class="elapp-card-head"><h2>' . esc_html( self::t( 'tl.exc_title' ) ) . '</h2></div><div class="elapp-pad">';
 		if ( ! $d['reasons'] ) {
-			$html .= '<p class="eld2-muted">' . esc_html( self::t( 'tl.exc_none' ) ) . '</p>';
+			$html .= '<p class="elapp-muted">' . esc_html( self::t( 'tl.exc_none' ) ) . '</p>';
 		}
 		foreach ( $d['reasons'] as $reason ) {
 			$html .= '<p><strong>' . esc_html( self::t( 'tl.exc_' . $reason['type'] ) ) . '</strong>';
@@ -366,11 +366,11 @@ class EasyLugg_D2_Render {
 			'delivery' => isset( $stages['handover'] ) ? $stages['handover'] : '',
 			'customer' => $row->photo_path ? '✓' : '',
 		);
-		$html = '<h2 class="eld2-h">' . esc_html( self::t( 'proof.title' ) ) . '</h2><div class="eld2-proofs">';
+		$html = '<h2 class="elapp-h">' . esc_html( self::t( 'proof.title' ) ) . '</h2><div class="elapp-proofs">';
 		foreach ( $boxes as $key => $at ) {
-			$html .= '<div class="eld2-pbox' . ( '' !== $at ? ' has' : '' ) . '"><strong>' . esc_html( self::t( 'proof.' . $key ) ) . '</strong><span>' . esc_html( '' !== $at ? self::t( 'proof.yes' ) . ( '✓' !== $at ? ' · ' . $at : '' ) : self::t( 'proof.no' ) ) . '</span></div>';
+			$html .= '<div class="elapp-pbox' . ( '' !== $at ? ' has' : '' ) . '"><strong>' . esc_html( self::t( 'proof.' . $key ) ) . '</strong><span>' . esc_html( '' !== $at ? self::t( 'proof.yes' ) . ( '✓' !== $at ? ' · ' . $at : '' ) : self::t( 'proof.no' ) ) . '</span></div>';
 		}
-		$html .= '</div><h3 class="eld2-h">' . esc_html( self::t( 'proof.tracked' ) ) . '</h3><dl class="eld2-kv eld2-kv-row">';
+		$html .= '</div><h3 class="elapp-h">' . esc_html( self::t( 'proof.tracked' ) ) . '</h3><dl class="elapp-kv elapp-kv-row">';
 		$last  = $d['events'] ? self::local( end( $d['events'] )->created_at, 'd/m H:i' ) : '—';
 		$cells = array(
 			self::t( 'detail.f_id' )      => $row->booking_code,

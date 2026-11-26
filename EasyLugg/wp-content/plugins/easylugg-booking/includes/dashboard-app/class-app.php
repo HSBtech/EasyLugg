@@ -1,7 +1,7 @@
 <?php
 /**
- * Dashboard 2 — the dashboard. Replaces the old dashboard under the shortcode
- * [easylugg_dashboard] (Stitch "Operational Console" design).
+ * The dashboard (Stitch "Operational Console" design), rendered for the
+ * shortcode [easylugg_dashboard].
  *
  * Screens: overview (KPI, booking list, detail, tracking, proof) and the
  * hosted Create booking / Settings / edit / detail screens of the previous
@@ -9,26 +9,26 @@
  *
  * Permissions: everyone with easylugg_view_dashboard. The Settings menu item
  * is Admin-only (easylugg_manage_config). Kill switch: option
- * easylugg_d2_enabled = 0 serves the previous dashboard again.
+ * easylugg_app_enabled = 0 serves the previous dashboard again.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class EasyLugg_D2 {
+final class EasyLugg_App {
 
-	const NONCE          = 'easylugg_d2';
-	const OPTION_ENABLED = 'easylugg_d2_enabled';
+	const NONCE          = 'easylugg_app';
+	const OPTION_ENABLED = 'easylugg_app_enabled';
 
 	/**
 	 * @return void
 	 */
 	public static function hooks() {
-		// Dashboard 2 replaces the old dashboard under the SAME shortcode, so the
-		// live page content stays [easylugg_dashboard]. Registered on init (after
-		// Dashboard 1 registered its own) so ours wins; Dashboard 1's render
-		// function is still called directly for its hosted screens and as the
+		// This app is rendered under the shortcode [easylugg_dashboard], so the
+		// page content never changes. Registered on init (after the previous
+		// dashboard registered its own) so ours wins; the previous render
+		// function is still called directly for the hosted screens and as the
 		// fallback when the kill switch is off.
 		add_action( 'init', array( __CLASS__, 'take_over_shortcode' ), 20 );
 		add_action( 'template_redirect', array( __CLASS__, 'send_headers' ), 0 );
@@ -54,7 +54,7 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * The single place that decides who can see Dashboard 2 (D2-07):
+	 * The single place that decides who can see the dashboard:
 	 * logged in, not locked, and has easylugg_view_dashboard.
 	 *
 	 * @return bool
@@ -85,22 +85,22 @@ final class EasyLugg_D2 {
 	 *
 	 * @return bool
 	 */
-	public static function is_dashboard2_request() {
+	public static function is_app_request() {
 		if ( ! is_singular() ) {
 			return false;
 		}
 		$post = get_queried_object();
 		if ( ! ( $post instanceof WP_Post ) || ! self::is_enabled() ) {
-			return false; // Kill switch off: Dashboard 1 serves the page on its own.
+			return false; // Kill switch off: the previous dashboard serves the page on its own.
 		}
 		return has_shortcode( $post->post_content, 'easylugg_dashboard' );
 	}
 
 	/**
 	 * Which screen this request asks for:
-	 *  home    = Dashboard 2 overview (KPI, list, detail, tracking, proof)
-	 *  embed   = a Dashboard 1 screen (bookings table, detail, edit, create,
-	 *            settings) hosted inside the Dashboard 2 shell
+	 *  home    = overview (KPI, list, detail, tracking, proof)
+	 *  embed   = a the previous dashboard screen (bookings table, detail, edit, create,
+	 *            settings) hosted inside the shell
 		 *
 	 * @return string
 	 */
@@ -117,7 +117,7 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * Which Dashboard 1 screen an embed request shows: create | config | other.
+	 * Which the previous dashboard screen an embed request shows: create | config | other.
 	 *
 	 * @return string
 	 */
@@ -128,7 +128,7 @@ final class EasyLugg_D2 {
 
 	/**
 	 * Current page URL with extra query args (the shell works on whichever
-	 * page carries the shortcode: /dashboard/ or /dashboard-2/).
+	 * page carries the shortcode: the dashboard page).
 	 *
 	 * @param array<string,string> $args Query args.
 	 * @return string
@@ -136,7 +136,7 @@ final class EasyLugg_D2 {
 	public static function page_url( $args = array() ) {
 		$base = get_permalink();
 		if ( ! $base ) {
-			$base = self::dashboard2_url();
+			$base = self::dashboard_page_url();
 		}
 		return $args ? add_query_arg( $args, $base ) : $base;
 	}
@@ -146,7 +146,7 @@ final class EasyLugg_D2 {
 	 *
 	 * @return string
 	 */
-	public static function dashboard2_url() {
+	public static function dashboard_page_url() {
 		$page = get_page_by_path( 'dashboard' );
 		if ( ! $page ) {
 			return home_url( '/dashboard/' );
@@ -158,7 +158,7 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * All Dashboard 2 text, loaded once per language from texts.php.
+	 * All dashboard text, loaded once per language from texts.php.
 	 * Cached per language like EasyLugg_Booking_Plugin::texts() (emails
 	 * switch language mid-request), never once for all languages.
 	 *
@@ -199,13 +199,13 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * No-cache + noindex for the Dashboard 2 page only.
+	 * No-cache + noindex for the dashboard page only.
 	 * Mirrors EasyLugg_Dashboard::send_headers().
 	 *
 	 * @return void
 	 */
 	public static function send_headers() {
-		if ( ! self::is_dashboard2_request() ) {
+		if ( ! self::is_app_request() ) {
 			return;
 		}
 		nocache_headers();
@@ -215,7 +215,7 @@ final class EasyLugg_D2 {
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			define( 'DONOTCACHEPAGE', true );
 		}
-		do_action( 'litespeed_control_set_nocache', 'EasyLugg Dashboard 2' );
+		do_action( 'litespeed_control_set_nocache', 'EasyLugg Dashboard' );
 	}
 
 	/**
@@ -223,7 +223,7 @@ final class EasyLugg_D2 {
 	 * @return array<string, mixed>
 	 */
 	public static function robots( $robots ) {
-		if ( self::is_dashboard2_request() ) {
+		if ( self::is_app_request() ) {
 			$robots['noindex']  = true;
 			$robots['nofollow'] = true;
 		}
@@ -231,28 +231,28 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * Enqueue Dashboard 2 assets, only on the Dashboard 2 page.
+	 * Enqueue dashboard assets, only on the dashboard page.
 	 * The customer booking scripts (booking.js, booking-storage.js,
-	 * booking-tracking.js) and the Dashboard 1 assets are never loaded here.
+	 * booking-tracking.js) and the the previous dashboard assets are never loaded here.
 	 *
 	 * @return void
 	 */
 	public static function enqueue() {
-		if ( ! self::is_dashboard2_request() ) {
+		if ( ! self::is_app_request() ) {
 			return;
 		}
 		$root = plugin_dir_path( dirname( dirname( __FILE__ ) ) );
-		$css  = $root . 'assets/dashboard2/dashboard2.css';
-		$js   = $root . 'assets/dashboard2/dashboard2.js';
-		wp_enqueue_style( 'easylugg-d2-style', plugins_url( 'assets/dashboard2/dashboard2.css', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $css ) );
+		$css  = $root . 'assets/dashboard-app/dashboard-app.css';
+		$js   = $root . 'assets/dashboard-app/dashboard-app.js';
+		wp_enqueue_style( 'easylugg-app-style', plugins_url( 'assets/dashboard-app/dashboard-app.css', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $css ) );
 		$mode = self::view_mode();
 		if ( 'home' === $mode ) {
-			// The overview does not use Dashboard 1's assets (its own enqueue ran
+			// The overview does not use the previous dashboard's assets (its own enqueue ran
 			// first because the page carries [easylugg_dashboard]).
 			wp_dequeue_style( 'easylugg-dashboard' );
 			wp_dequeue_script( 'easylugg-dashboard' );
 		} elseif ( ! wp_script_is( 'easylugg-dashboard', 'enqueued' ) ) {
-			// Dashboard 1 screens need Dashboard 1's own assets (same handles,
+			// the previous dashboard screens need the previous dashboard's own assets (same handles,
 			// localized object and nonce) when its enqueue did not already run.
 			$d1css = $root . 'assets/booking-dashboard.css';
 			$d1js  = $root . 'assets/booking-dashboard.js';
@@ -271,11 +271,11 @@ final class EasyLugg_D2 {
 			);
 		}
 		if ( 'home' !== $mode ) {
-			$ejs = $root . 'assets/dashboard2/dashboard2-embed.js';
-			wp_enqueue_script( 'easylugg-d2-embed', plugins_url( 'assets/dashboard2/dashboard2-embed.js', dirname( dirname( __FILE__ ) ) ), array( 'easylugg-dashboard' ), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $ejs ), true );
+			$ejs = $root . 'assets/dashboard-app/dashboard-app-embed.js';
+			wp_enqueue_script( 'easylugg-app-embed', plugins_url( 'assets/dashboard-app/dashboard-app-embed.js', dirname( dirname( __FILE__ ) ) ), array( 'easylugg-dashboard' ), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $ejs ), true );
 			wp_localize_script(
-				'easylugg-d2-embed',
-				'EasyLuggD2Embed',
+				'easylugg-app-embed',
+				'EasyLuggAppEmbed',
 				array(
 					'home'   => self::page_url(),
 					'labels' => array(
@@ -293,15 +293,15 @@ final class EasyLugg_D2 {
 			);
 			return;
 		}
-		wp_enqueue_script( 'easylugg-d2', plugins_url( 'assets/dashboard2/dashboard2.js', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $js ), true );
+		wp_enqueue_script( 'easylugg-app', plugins_url( 'assets/dashboard-app/dashboard-app.js', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $js ), true );
 		$lang     = EasyLugg_Booking_Plugin::current_lang();
 		$ajax_url = admin_url( 'admin-ajax.php' );
 		if ( '' !== $lang ) {
 			$ajax_url = add_query_arg( 'lang', $lang, $ajax_url );
 		}
 		wp_localize_script(
-			'easylugg-d2',
-			'EasyLuggD2',
+			'easylugg-app',
+			'EasyLuggApp',
 			array(
 				'ajaxUrl' => $ajax_url,
 				'nonce'   => wp_create_nonce( self::NONCE ),
@@ -326,7 +326,7 @@ final class EasyLugg_D2 {
 		if ( ! self::is_enabled() ) {
 			return EasyLugg_Dashboard::render_shortcode();
 		}
-		// Permission is decided BEFORE any DB query (same order as Dashboard 1).
+		// Permission is decided BEFORE any DB query (same order as the previous dashboard).
 		$gate = self::gate_state();
 		if ( 'login' === $gate ) {
 			return self::render_login();
@@ -340,25 +340,25 @@ final class EasyLugg_D2 {
 
 		$mode = self::view_mode();
 		ob_start();
-		// eld2-app = app shell inside the theme page (site header/footer stay).
-		echo '<div class="eld2 eld2-app" id="eld2">';
+		// elapp-app = app shell inside the theme page (site header/footer stay).
+		echo '<div class="elapp elapp-app" id="elapp">';
 		self::render_sidebar( $mode );
-		echo '<div class="eld2-body">';
+		echo '<div class="elapp-body">';
 		self::render_header( $mode );
-		echo '<main class="eld2-main">';
+		echo '<main class="elapp-main">';
 		if ( 'embed' === $mode ) {
-			// Dashboard 1 screens (bookings table, detail, edit, create, settings),
-			// reusing Dashboard 1's own rendering and save handlers unchanged.
-			echo '<div class="eld2-embed" data-screen="' . esc_attr( self::embed_screen() ) . '">' . EasyLugg_Dashboard::render_shortcode() . '</div>';
+			// the previous dashboard screens (bookings table, detail, edit, create, settings),
+			// reusing the previous dashboard's own rendering and save handlers unchanged.
+			echo '<div class="elapp-embed" data-screen="' . esc_attr( self::embed_screen() ) . '">' . EasyLugg_Dashboard::render_shortcode() . '</div>';
 		} else {
-			// Regions filled by dashboard2.js from the AJAX endpoints.
-			echo '<div class="eld2-kpi" id="eld2-kpi" aria-live="polite"></div>';
-			echo '<div class="eld2-work">';
-			echo '<div class="eld2-list" id="eld2-list"></div>';
-			echo '<div class="eld2-detail" id="eld2-detail">' . EasyLugg_D2_Render::detail_empty() . '</div>';
-			echo '<div class="eld2-tracking" id="eld2-tracking"></div>';
+			// Regions filled by dashboard-app.js from the AJAX endpoints.
+			echo '<div class="elapp-kpi" id="elapp-kpi" aria-live="polite"></div>';
+			echo '<div class="elapp-work">';
+			echo '<div class="elapp-list" id="elapp-list"></div>';
+			echo '<div class="elapp-detail" id="elapp-detail">' . EasyLugg_App_Render::detail_empty() . '</div>';
+			echo '<div class="elapp-tracking" id="elapp-tracking"></div>';
 			echo '</div>';
-			echo '<div class="eld2-proof" id="eld2-proof"></div>';
+			echo '<div class="elapp-proof" id="elapp-proof"></div>';
 		}
 		echo '</main>';
 		echo '</div>';
@@ -373,10 +373,10 @@ final class EasyLugg_D2 {
 		$form = wp_login_form(
 			array(
 				'echo'     => false,
-				'redirect' => self::dashboard2_url(),
+				'redirect' => self::dashboard_page_url(),
 			)
 		);
-		return '<div class="eld2 eld2-gate"><h2>' . esc_html( self::t( 'gate.login_title' ) ) . '</h2><p>' . esc_html( self::t( 'gate.login_text' ) ) . '</p>' . $form . '</div>';
+		return '<div class="elapp elapp-gate"><h2>' . esc_html( self::t( 'gate.login_title' ) ) . '</h2><p>' . esc_html( self::t( 'gate.login_text' ) ) . '</p>' . $form . '</div>';
 	}
 
 	/**
@@ -389,14 +389,14 @@ final class EasyLugg_D2 {
 		if ( ! headers_sent() ) {
 			status_header( 403 );
 		}
-		return '<div class="eld2 eld2-gate"><h2>403</h2><p>' . esc_html( $message ) . '</p><p><a href="' . esc_url( wp_logout_url( self::dashboard2_url() ) ) . '">' . esc_html( self::t( 'gate.logout' ) ) . '</a></p></div>';
+		return '<div class="elapp elapp-gate"><h2>403</h2><p>' . esc_html( $message ) . '</p><p><a href="' . esc_url( wp_logout_url( self::dashboard_page_url() ) ) . '">' . esc_html( self::t( 'gate.logout' ) ) . '</a></p></div>';
 	}
 
 	/**
 	 * Fixed navy sidebar: logo (text placeholder until the owner sends
 	 * the logo file) + left menu. Operations, Customers, Partners,
 	 * Reports are NOT rendered in Phase 1 (no data/process yet, SRS §9).
-	 * Settings links to the Dashboard 1 Settings tab and is Admin-only.
+	 * Settings links to the the previous dashboard Settings tab and is Admin-only.
 	 *
 	 * @return void
 	 */
@@ -408,9 +408,9 @@ final class EasyLugg_D2 {
 		$bookings_url = current_user_can( 'easylugg_create_booking' ) ? self::page_url( array( 'tab' => 'create' ) ) : self::page_url( array( 'mode' => 'open' ) );
 		$settings_url = self::page_url( array( 'tab' => 'config' ) );
 		?>
-		<aside class="eld2-side">
-			<div class="eld2-logo"><?php echo esc_html( self::t( 'header.logo' ) ); ?></div>
-			<nav class="eld2-nav" aria-label="<?php echo esc_attr( self::t( 'nav.aria' ) ); ?>">
+		<aside class="elapp-side">
+			<div class="elapp-logo"><?php echo esc_html( self::t( 'header.logo' ) ); ?></div>
+			<nav class="elapp-nav" aria-label="<?php echo esc_attr( self::t( 'nav.aria' ) ); ?>">
 				<a class="<?php echo 'home' === $mode ? 'is-active' : ''; ?>" href="<?php echo esc_url( $home_url ); ?>"><?php echo esc_html( self::t( 'nav.dashboard' ) ); ?></a>
 				<a class="<?php echo $is_bookings ? 'is-active' : ''; ?>" href="<?php echo esc_url( $bookings_url ); ?>"><?php echo esc_html( self::t( 'nav.bookings' ) ); ?></a>
 				<?php if ( current_user_can( 'easylugg_manage_config' ) ) : ?>
@@ -423,7 +423,7 @@ final class EasyLugg_D2 {
 
 	/**
 	 * Fixed white header: title + subtitle, search and bell (position
-	 * only, no function yet — search/bell count come in D2-03), account
+	 * only, no function yet — search/bell count), account
 	 * chip with avatar initials, display name and role.
 	 *
 	 * @return void
@@ -432,8 +432,8 @@ final class EasyLugg_D2 {
 		$user = wp_get_current_user();
 		$role = current_user_can( 'easylugg_manage_config' ) ? self::t( 'header.role_admin' ) : self::t( 'header.role_staff' );
 		?>
-		<header class="eld2-head">
-			<div class="eld2-title">
+		<header class="elapp-head">
+			<div class="elapp-title">
 				<?php
 				$screen = 'embed' === $mode ? self::embed_screen() : 'home';
 				$titles = array(
@@ -446,13 +446,13 @@ final class EasyLugg_D2 {
 				<p><?php echo esc_html( self::t( $pair[1] ) ); ?></p>
 			</div>
 			<?php if ( 'embed' === $mode && in_array( self::embed_screen(), array( 'create', 'config' ), true ) ) : ?>
-				<div class="eld2-search"></div>
+				<div class="elapp-search"></div>
 			<?php elseif ( 'home' === $mode ) : ?>
-				<div class="eld2-search">
-					<input type="search" id="eld2-search" placeholder="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>" aria-label="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>">
+				<div class="elapp-search">
+					<input type="search" id="elapp-search" placeholder="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>" aria-label="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>">
 				</div>
 			<?php else : ?>
-				<form class="eld2-search" method="get" action="<?php echo esc_url( self::page_url() ); ?>">
+				<form class="elapp-search" method="get" action="<?php echo esc_url( self::page_url() ); ?>">
 					<?php
 					if ( isset( $_GET['page_id'] ) && is_scalar( $_GET['page_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 						echo '<input type="hidden" name="page_id" value="' . esc_attr( absint( $_GET['page_id'] ) ) . '">';
@@ -461,12 +461,12 @@ final class EasyLugg_D2 {
 					<input type="search" name="q" placeholder="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>" aria-label="<?php echo esc_attr( self::t( 'header.search_placeholder' ) ); ?>">
 				</form>
 			<?php endif; ?>
-			<button type="button" class="eld2-bell" aria-label="<?php echo esc_attr( self::t( 'header.bell_label' ) ); ?>">&#128276;</button>
-			<div class="eld2-acct">
-				<span class="eld2-avatar" aria-hidden="true"><?php echo esc_html( self::initials( $user->display_name ) ); ?></span>
-				<span class="eld2-acct-text">
-					<span class="eld2-acct-name"><?php echo esc_html( $user->display_name ); ?></span>
-					<span class="eld2-acct-role"><?php echo esc_html( $role ); ?></span>
+			<button type="button" class="elapp-bell" aria-label="<?php echo esc_attr( self::t( 'header.bell_label' ) ); ?>">&#128276;</button>
+			<div class="elapp-acct">
+				<span class="elapp-avatar" aria-hidden="true"><?php echo esc_html( self::initials( $user->display_name ) ); ?></span>
+				<span class="elapp-acct-text">
+					<span class="elapp-acct-name"><?php echo esc_html( $user->display_name ); ?></span>
+					<span class="elapp-acct-role"><?php echo esc_html( $role ); ?></span>
 				</span>
 			</div>
 		</header>

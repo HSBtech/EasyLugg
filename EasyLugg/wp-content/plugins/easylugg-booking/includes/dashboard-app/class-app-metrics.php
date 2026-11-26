@@ -1,13 +1,13 @@
 <?php
 /**
- * Dashboard 2 pure helpers (no WordPress calls): status groups and KPI math.
+ * Dashboard pure helpers (no WordPress calls): status groups and KPI math.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class EasyLugg_D2_Metrics {
+class EasyLugg_App_Metrics {
 
 	/**
 	 * Status groups used by the KPI tiles and the list tabs (SRS 6.3, 6.4).

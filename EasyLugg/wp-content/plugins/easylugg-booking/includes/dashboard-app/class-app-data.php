@@ -1,13 +1,13 @@
 <?php
 /**
- * Dashboard 2 read-only queries. Every query is a SELECT through $wpdb->prepare.
+ * Dashboard read-only queries. Every query is a SELECT through $wpdb->prepare.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class EasyLugg_D2_Data {
+class EasyLugg_App_Data {
 
 	const PER_PAGE = 10;
 
@@ -67,9 +67,9 @@ class EasyLugg_D2_Data {
 	public static function tab_counts( $counts ) {
 		return array(
 			'all'       => $counts['total'],
-			'pickup'    => EasyLugg_D2_Metrics::group_count( $counts['by_status'], 'pickup' ),
-			'transit'   => EasyLugg_D2_Metrics::group_count( $counts['by_status'], 'transit' ),
-			'delivered' => EasyLugg_D2_Metrics::group_count( $counts['by_status'], 'delivered' ),
+			'pickup'    => EasyLugg_App_Metrics::group_count( $counts['by_status'], 'pickup' ),
+			'transit'   => EasyLugg_App_Metrics::group_count( $counts['by_status'], 'transit' ),
+			'delivered' => EasyLugg_App_Metrics::group_count( $counts['by_status'], 'delivered' ),
 			'exception' => $counts['exception'],
 		);
 	}
@@ -93,7 +93,7 @@ class EasyLugg_D2_Data {
 		} else {
 			$where[] = 'b.service_date BETWEEN %s AND %s';
 			array_push( $args, $f['from'], $f['to'] );
-			$groups  = EasyLugg_D2_Metrics::groups();
+			$groups  = EasyLugg_App_Metrics::groups();
 			if ( isset( $groups[ $f['tab'] ] ) ) {
 				$where[] = 'b.status IN (' . implode( ',', array_fill( 0, count( $groups[ $f['tab'] ] ), '%s' ) ) . ')';
 				$args    = array_merge( $args, $groups[ $f['tab'] ] );

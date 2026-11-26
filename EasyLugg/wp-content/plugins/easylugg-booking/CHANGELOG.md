@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### 2026-11-26 — New dashboard (Dashboard 2) replaces the staff dashboard
-The staff dashboard has a new interface, designed in Stitch with the EasyLugg palette (Teal `#0294BB`, Dark Blue `#025282`, Light Blue `#A9DFEA`, Soft Blue `#EAF4F7`, Border `#D9E3E8`). It is served by the **same shortcode `[easylugg_dashboard]`**, so no page content changes on live.
+### 2026-11-26 — New dashboard interface
+The staff dashboard has a new interface, designed in Stitch with the EasyLugg palette (Teal `#0294BB`, Dark Blue `#025282`, Light Blue `#A9DFEA`, Soft Blue `#EAF4F7`, Border `#D9E3E8`). It is served by the **same shortcode `[easylugg_dashboard]`**, so no page content changes on live. There is only one dashboard.
 
 #### Added
 - **Shell:** navy sidebar (Dashboard, Bookings, Settings; Settings is Admin-only), white header with title, search and account chip. It sits inside the theme page (site header/footer stay) at full viewport width, and never uses `position: fixed`, so the WordPress admin bar does not overlap it.
@@ -20,29 +20,26 @@ The staff dashboard has a new interface, designed in Stitch with the EasyLugg pa
   - Booking detail (loaded without reloading the page, URL gets `?code=`): booking information, customer (the passport number is never shown), luggage (total and sizes, tag code), pickup and delivery, "handled by", and quick links (call, email, edit, full detail).
   - Live Tracking timeline built from the audit log and photos; Exception Alert (a booking is an exception when `needs_review = 1`, or an `incident` audit exists, or it is `no_show` with luggage still held); Proof & Support strip (pickup, delivery and customer photo presence) and tracked information.
 - **Bookings menu** opens the *Create a booking* form only, restyled from the Stitch design (segmented Route and Source controls, section headings, +/- bag steppers, sticky Cancel/Create bar). **Settings** shows the configuration only (Pricing, Hours & slots, Operations & capacity, Hub & meeting point, Change history) as one card per section with a section index on the right. Both reuse the previous dashboard screens and their save handlers unchanged (field names, validation and saving are not modified).
-- New files: `includes/dashboard2/` (`bootstrap.php`, `class-d2.php`, `class-d2-metrics.php`, `class-d2-data.php`, `class-d2-render.php`, `class-d2-ajax.php`, `texts.php`) and `assets/dashboard2/` (`dashboard2.css`, `dashboard2.js`, `dashboard2-embed.js`).
-- AJAX actions `easylugg_d2_refresh` and `easylugg_d2_detail` (logged-in users only, nonce `easylugg_d2`, permission re-checked on the server, no `nopriv` action).
-- Emergency switch: option `easylugg_d2_enabled` = `0` serves the previous dashboard again (default `1`).
-- All Dashboard 2 text goes through `__()` with the `easylugg-booking` domain, cached per language, in `includes/dashboard2/texts.php`.
+- New files: `includes/dashboard-app/` (`bootstrap.php`, `class-app.php`, `class-app-metrics.php`, `class-app-data.php`, `class-app-render.php`, `class-app-ajax.php`, `texts.php`) and `assets/dashboard-app/` (`dashboard-app.css`, `dashboard-app.js`, `dashboard-app-embed.js`).
+- AJAX actions `easylugg_app_refresh` and `easylugg_app_detail` (logged-in users only, nonce `easylugg_app`, permission re-checked on the server, no `nopriv` action).
+- Emergency switch: option `easylugg_app_enabled` = `0` serves the previous dashboard code again (default `1`).
+- All dashboard text goes through `__()` with the `easylugg-booking` domain, cached per language, in `includes/dashboard-app/texts.php`.
 
 #### Changed
-- Shortcode `[easylugg_dashboard]` is now rendered by Dashboard 2. The previous dashboard code (`includes/dashboard*.php`, `assets/booking-dashboard.*`) is unchanged and still renders the Bookings detail, edit, create and Settings screens inside the new shell.
-- `easylugg-booking.php`: one added `require_once` for the Dashboard 2 bootstrap.
+- Shortcode `[easylugg_dashboard]` is now rendered by the new interface. The previous dashboard code (`includes/dashboard*.php`, `assets/booking-dashboard.*`) is unchanged and still renders the Bookings detail, edit, create and Settings screens inside the new shell.
+- `easylugg-booking.php`: one added `require_once` for the dashboard bootstrap.
 
 #### Security and data
 - Read-only: every query is a `SELECT` through `$wpdb->prepare` (search uses `esc_like`). The only write is one `pii_view` audit row each time a booking is opened, as in the previous dashboard.
 - Output is escaped (`esc_html`, `esc_attr`, `esc_url`); HTML is built on the server, the script only swaps regions.
 - The page is served with no-store and noindex headers.
 - Times are stored in UTC and shown in the site time zone; unknown statuses (for example a future status) do not break the lists.
-- No database change. No new options except `easylugg_d2_enabled` (optional).
-
-#### Removed (during the same release, never shipped)
-- A separate `[easylugg_dashboard2]` shortcode, a `?classic=1` mode and a floating "Dashboard 1 / Dashboard 2" switch button. Only `[easylugg_dashboard]` exists.
+- No database change. No new options except `easylugg_app_enabled` (optional).
 
 #### Known limits
 - Proof & Support shows whether photos exist, without thumbnails or a lightbox (photos open in the full detail screen).
 - The list is sorted by service date then creation time, not by service time.
-- Korean and Vietnamese strings for Dashboard 2 are not translated yet.
+- Korean and Vietnamese strings of the new interface are not translated yet.
 - Not covered by automated tests; verified by HTTP checks on the local site and DOM checks of the form script. Needs a visual and a save/create check on the live site after deployment.
 
 #### Upgrade notes

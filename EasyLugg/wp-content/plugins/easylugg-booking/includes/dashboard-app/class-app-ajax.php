@@ -1,17 +1,17 @@
 <?php
 /**
- * Dashboard 2 AJAX (read-only). Logged-in users only; no nopriv actions.
+ * Dashboard AJAX (read-only). Logged-in users only; no nopriv actions.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class EasyLugg_D2_Ajax {
+class EasyLugg_App_Ajax {
 
 	public static function hooks() {
-		add_action( 'wp_ajax_easylugg_d2_refresh', array( __CLASS__, 'refresh' ) );
-		add_action( 'wp_ajax_easylugg_d2_detail', array( __CLASS__, 'detail' ) );
+		add_action( 'wp_ajax_easylugg_app_refresh', array( __CLASS__, 'refresh' ) );
+		add_action( 'wp_ajax_easylugg_app_detail', array( __CLASS__, 'detail' ) );
 	}
 
 	/**
@@ -20,9 +20,9 @@ class EasyLugg_D2_Ajax {
 	 * @return void
 	 */
 	private static function guard() {
-		check_ajax_referer( EasyLugg_D2::NONCE, 'nonce' );
-		if ( ! EasyLugg_D2::is_enabled() || ! EasyLugg_D2::can_view() ) {
-			wp_send_json_error( array( 'message' => EasyLugg_D2::t( 'gate.no_permission' ) ), 403 );
+		check_ajax_referer( EasyLugg_App::NONCE, 'nonce' );
+		if ( ! EasyLugg_App::is_enabled() || ! EasyLugg_App::can_view() ) {
+			wp_send_json_error( array( 'message' => EasyLugg_App::t( 'gate.no_permission' ) ), 403 );
 		}
 	}
 
@@ -67,13 +67,13 @@ class EasyLugg_D2_Ajax {
 		$days      = (int) round( ( strtotime( $to ) - strtotime( $from ) ) / DAY_IN_SECONDS ) + 1;
 		$prev_to   = wp_date( 'Y-m-d', strtotime( $from . ' -1 day' ) );
 		$prev_from = wp_date( 'Y-m-d', strtotime( $from . ' -' . $days . ' day' ) );
-		$counts    = EasyLugg_D2_Data::counts( $from, $to );
-		$yesterday = EasyLugg_D2_Data::counts( $prev_from, $prev_to );
-		$result    = EasyLugg_D2_Data::list_rows( $f );
+		$counts    = EasyLugg_App_Data::counts( $from, $to );
+		$yesterday = EasyLugg_App_Data::counts( $prev_from, $prev_to );
+		$result    = EasyLugg_App_Data::list_rows( $f );
 		wp_send_json_success(
 			array(
-				'kpi'  => EasyLugg_D2_Render::kpi( $counts, $yesterday['total'] ),
-				'list' => EasyLugg_D2_Render::list_block( $f, $result, EasyLugg_D2_Data::tab_counts( $counts ), $code ),
+				'kpi'  => EasyLugg_App_Render::kpi( $counts, $yesterday['total'] ),
+				'list' => EasyLugg_App_Render::list_block( $f, $result, EasyLugg_App_Data::tab_counts( $counts ), $code ),
 				'page' => $result['page'],
 			)
 		);
@@ -81,18 +81,18 @@ class EasyLugg_D2_Ajax {
 
 	/**
 	 * Detail, timeline/exception and proof for one booking. Writes one
-	 * pii_view audit row per open (same as Dashboard 1, DET-04).
+	 * pii_view audit row per open (same as the previous dashboard, DET-04).
 	 *
 	 * @return void
 	 */
 	public static function detail() {
 		self::guard();
 		$code = strtoupper( self::param( 'code' ) );
-		$d    = '' !== $code ? EasyLugg_D2_Data::detail( $code ) : null;
+		$d    = '' !== $code ? EasyLugg_App_Data::detail( $code ) : null;
 		if ( ! $d ) {
 			wp_send_json_success(
 				array(
-					'detail'   => EasyLugg_D2_Render::detail_missing(),
+					'detail'   => EasyLugg_App_Render::detail_missing(),
 					'tracking' => '',
 					'proof'    => '',
 				)
@@ -101,9 +101,9 @@ class EasyLugg_D2_Ajax {
 		EasyLugg_Dashboard_Setup::audit( 'booking', $d['row']->booking_code, 'pii_view' );
 		wp_send_json_success(
 			array(
-				'detail'   => EasyLugg_D2_Render::detail( $d ),
-				'tracking' => EasyLugg_D2_Render::tracking( $d ),
-				'proof'    => EasyLugg_D2_Render::proof( $d ),
+				'detail'   => EasyLugg_App_Render::detail( $d ),
+				'tracking' => EasyLugg_App_Render::tracking( $d ),
+				'proof'    => EasyLugg_App_Render::proof( $d ),
 			)
 		);
 	}
