@@ -13,9 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `includes/dashboard2/` and `assets/dashboard2/` (shortcode `[easylugg_dashboard2]`): KPI row, booking list with tabs, date range, route filter and search, booking detail, timeline, exception alert and proof strip. Read-only; the only write is the `pii_view` audit row on opening a booking (same as Dashboard 1).
 - Bookings (menu) opens the Create a booking form and Settings shows the configuration only, both restyled from the Stitch design. They reuse the Dashboard 1 screens and save handlers unchanged (hosted inside the Dashboard 2 shell).
-- `?classic=1` opens the original Dashboard 1; a floating button switches between the two. Put `[easylugg_dashboard2]` on the `dashboard` page to make Dashboard 2 the main dashboard.
+- `?classic=1` opens the original Dashboard 1; a floating button switches between the two. Dashboard 2 replaces the old dashboard under the same shortcode `[easylugg_dashboard]` (the page content does not change); `[easylugg_dashboard2]` stays as an alias. Setting `easylugg_d2_enabled` to 0 serves the old dashboard again.
 - One touchpoint in `easylugg-booking.php`: a single `require_once` for the Dashboard 2 bootstrap. Dashboard 1 files are not modified.
-- Deploy note: on live, edit the `dashboard` page content to `[easylugg_dashboard2]` by hand.
+- Deploy note: nothing to change on live pages; the `dashboard` page keeps `[easylugg_dashboard]`.
 
 ### 2026-11-25 — WPML readiness (language handling)
 ### Added

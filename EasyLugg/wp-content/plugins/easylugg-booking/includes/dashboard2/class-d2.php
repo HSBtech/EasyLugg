@@ -37,9 +37,23 @@ final class EasyLugg_D2 {
 	 */
 	public static function hooks() {
 		add_shortcode( 'easylugg_dashboard2', array( __CLASS__, 'render_shortcode' ) );
+		// Dashboard 2 replaces the old dashboard under the SAME shortcode, so the
+		// live page content stays [easylugg_dashboard]. Registered on init (after
+		// Dashboard 1 registered its own) so ours wins; Dashboard 1's render
+		// function is still called directly for its hosted screens and as the
+		// fallback when the kill switch is off.
+		add_action( 'init', array( __CLASS__, 'take_over_shortcode' ), 20 );
 		add_action( 'template_redirect', array( __CLASS__, 'send_headers' ), 0 );
 		add_filter( 'wp_robots', array( __CLASS__, 'robots' ) );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ), 20 );
+	}
+
+	/**
+	 * @return void
+	 */
+	public static function take_over_shortcode() {
+		remove_shortcode( 'easylugg_dashboard' );
+		add_shortcode( 'easylugg_dashboard', array( __CLASS__, 'render_shortcode' ) );
 	}
 
 	/**
@@ -88,7 +102,10 @@ final class EasyLugg_D2 {
 			return false;
 		}
 		$post = get_queried_object();
-		return $post instanceof WP_Post && has_shortcode( $post->post_content, 'easylugg_dashboard2' );
+		if ( ! ( $post instanceof WP_Post ) || ! self::is_enabled() ) {
+			return false; // Kill switch off: Dashboard 1 serves the page on its own.
+		}
+		return has_shortcode( $post->post_content, 'easylugg_dashboard' ) || has_shortcode( $post->post_content, 'easylugg_dashboard2' );
 	}
 
 	/**
@@ -141,16 +158,16 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * URL of the Dashboard 2 page (slug dashboard-2), or the fallback path.
+	 * URL of the dashboard page (slug dashboard), or the fallback path.
 	 *
 	 * @return string
 	 */
 	public static function dashboard2_url() {
-		$page = get_page_by_path( 'dashboard-2' );
+		$page = get_page_by_path( 'dashboard' );
 		if ( ! $page ) {
-			return home_url( '/dashboard-2/' );
+			return home_url( '/dashboard/' );
 		}
-		// WPML: link to the translation for the current language (slug stays dashboard-2).
+		// WPML: link to the translation for the current language (slug stays dashboard).
 		$lang = EasyLugg_Booking_Plugin::current_lang();
 		$id   = '' !== $lang ? apply_filters( 'wpml_object_id', $page->ID, 'page', true, $lang ) : $page->ID;
 		return get_permalink( $id ? $id : $page->ID );
@@ -245,10 +262,14 @@ final class EasyLugg_D2 {
 		$js   = $root . 'assets/dashboard2/dashboard2.js';
 		wp_enqueue_style( 'easylugg-d2-style', plugins_url( 'assets/dashboard2/dashboard2.css', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $css ) );
 		$mode = self::view_mode();
-		if ( 'home' !== $mode ) {
-			// Dashboard 1 screens: load Dashboard 1's own assets (same handles, same
-			// localized object, same nonce) because its shortcode page check
-			// does not match this page.
+		if ( 'home' === $mode ) {
+			// The overview does not use Dashboard 1's assets (its own enqueue ran
+			// first because the page carries [easylugg_dashboard]).
+			wp_dequeue_style( 'easylugg-dashboard' );
+			wp_dequeue_script( 'easylugg-dashboard' );
+		} elseif ( ! wp_script_is( 'easylugg-dashboard', 'enqueued' ) ) {
+			// Dashboard 1 screens need Dashboard 1's own assets (same handles,
+			// localized object and nonce) when its enqueue did not already run.
 			$d1css = $root . 'assets/booking-dashboard.css';
 			$d1js  = $root . 'assets/booking-dashboard.js';
 			wp_enqueue_style( 'easylugg-dashboard', plugins_url( 'assets/booking-dashboard.css', dirname( dirname( __FILE__ ) ) ), array(), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $d1css ) );
@@ -264,6 +285,8 @@ final class EasyLugg_D2 {
 					'confirm' => EasyLugg_Dashboard::t( 'act.confirm_prompt' ),
 				)
 			);
+		}
+		if ( 'home' !== $mode ) {
 			$ejs = $root . 'assets/dashboard2/dashboard2-embed.js';
 			wp_enqueue_script( 'easylugg-d2-embed', plugins_url( 'assets/dashboard2/dashboard2-embed.js', dirname( dirname( __FILE__ ) ) ), array( 'easylugg-dashboard' ), EasyLugg_Booking_Plugin::VERSION . '.' . filemtime( $ejs ), true );
 			wp_localize_script(
@@ -315,9 +338,9 @@ final class EasyLugg_D2 {
 	 * @return string
 	 */
 	public static function render_shortcode() {
-		// Disabled: one short message, nothing else.
+		// Kill switch off: the old dashboard serves the page unchanged.
 		if ( ! self::is_enabled() ) {
-			return '<div class="eld2 eld2-gate"><p>' . esc_html( self::t( 'disabled.message' ) ) . '</p></div>';
+			return EasyLugg_Dashboard::render_shortcode();
 		}
 		// Permission is decided BEFORE any DB query (same order as Dashboard 1).
 		$gate = self::gate_state();
@@ -333,7 +356,7 @@ final class EasyLugg_D2 {
 
 		$mode = self::view_mode();
 		if ( 'classic' === $mode ) {
-			return '<div class="eld2-classic">' . do_shortcode( '[easylugg_dashboard]' ) . '</div>'
+			return '<div class="eld2-classic">' . EasyLugg_Dashboard::render_shortcode() . '</div>'
 				. '<aside class="eld2-switch eld2-switch-classic"><a href="' . esc_url( self::page_url() ) . '">&#8646; ' . esc_html( self::t( 'switch.to_dashboard2' ) ) . '</a></aside>';
 		}
 
@@ -347,7 +370,7 @@ final class EasyLugg_D2 {
 		if ( 'embed' === $mode ) {
 			// Dashboard 1 screens (bookings table, detail, edit, create, settings),
 			// reusing Dashboard 1's own rendering and save handlers unchanged.
-			echo '<div class="eld2-embed" data-screen="' . esc_attr( self::embed_screen() ) . '">' . do_shortcode( '[easylugg_dashboard]' ) . '</div>';
+			echo '<div class="eld2-embed" data-screen="' . esc_attr( self::embed_screen() ) . '">' . EasyLugg_Dashboard::render_shortcode() . '</div>';
 		} else {
 			// Regions filled by dashboard2.js from the AJAX endpoints.
 			echo '<div class="eld2-kpi" id="eld2-kpi" aria-live="polite"></div>';
