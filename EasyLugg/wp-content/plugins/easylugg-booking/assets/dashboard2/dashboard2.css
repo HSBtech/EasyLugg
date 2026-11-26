@@ -5,7 +5,7 @@
    muted #3e484e. Font stack: Plus Jakarta Sans (theme) with system
    fallback. Layout: fixed navy sidebar (220px) + fixed white header
    (64px) + KPI row + 3-column workspace (List 5 / Detail 4 /
-   Tracking 3) + Proof row + floating switch button. The content
+   Tracking 3) + Proof row. The content
    regions are empty in D2-01; D2-03/D2-04 fill them with real data. */
 
 .eld2 {
@@ -267,35 +267,6 @@
 .eld2-proof {
 	padding: 24px;
 	box-sizing: border-box;
-}
-
-/* ---- Floating switch button ---- */
-.eld2-switch {
-	position: fixed;
-	bottom: 24px;
-	right: 24px;
-	z-index: 50;
-}
-
-.eld2-switch a {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	padding: 10px 14px;
-	background: #fff;
-	border: 1px solid #d9e3e8;
-	border-radius: 8px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
-	font-size: 12px;
-	font-weight: 600;
-	color: #025282;
-	text-decoration: none;
-	transition: background .15s, box-shadow .15s;
-}
-
-.eld2-switch a:hover {
-	background: #eaf4f7;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
 }
 
 /* ---- Gate (login / forbidden / disabled) ---- */
@@ -618,8 +589,8 @@
 /* ---- App shell (26/11, v2) ----
    The app stays INSIDE the theme page (site header/footer remain). It breaks
    out of the Elementor boxed container to full viewport width, then lays out
-   sidebar + body as a flex row. Nothing is position:fixed except the switch
-   button, so the WP admin bar and the theme header never collide with it. */
+   sidebar + body as a flex row. Nothing is position:fixed, so the WP admin bar
+   and the theme header never collide with it. */
 .eld2.eld2-app {
 	display: flex;
 	align-items: stretch;
@@ -715,13 +686,6 @@
 	background: #fff;
 	border: 1px solid #d9e3e8;
 	color: #025282;
-}
-
-.eld2.eld2-app .eld2-switch {
-	position: fixed;
-	right: 24px;
-	bottom: 24px;
-	z-index: 9990;
 }
 
 @media (max-width: 768px) {
@@ -1125,17 +1089,6 @@
 	font-size: 12px;
 }
 
-.eld2.eld2-app .eld2-switch a {
-	font-size: 12px;
-	color: #025282;
-}
-
-/* Keep the floating switch clear of third-party chat widgets (bottom right). */
-.eld2.eld2-app .eld2-switch {
-	right: 96px;
-	bottom: 20px;
-}
-
 .eld2.eld2-app .eld2-dl { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #3e484e; margin: 0; }
 
 /* ---- Dashboard 1 screens hosted inside the shell (Bookings, Settings, edit, create) ----
@@ -1227,10 +1180,6 @@
 .eld2.eld2-app .eld2-embed h3,
 .eld2.eld2-app .eld2-embed h4 {
 	color: #025282;
-}
-
-.eld2-classic .eld {
-	margin-bottom: 80px;
 }
 
 /* ---- Create a booking / Settings (Stitch "Create Booking", concise) ---- */

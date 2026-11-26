@@ -171,9 +171,4 @@ return array(
 	'disabled' => array(
 		'message' => __( 'Dashboard 2 is temporarily disabled.', 'easylugg-booking' ),
 	),
-	'switch'   => array(
-		// Static link to Dashboard 1 for now; toggle/remember is D2-05.
-		'to_dashboard1' => __( 'Dashboard 1', 'easylugg-booking' ),
-		'to_dashboard2' => __( 'Dashboard 2', 'easylugg-booking' ),
-	),
 );

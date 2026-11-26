@@ -1,26 +1,15 @@
 <?php
 /**
- * Dashboard 2 — skeleton (Phase 1A, brief D2-01) with the Stitch
- * "Operational Console" design applied (25/11/2026).
+ * Dashboard 2 — the dashboard. Replaces the old dashboard under the shortcode
+ * [easylugg_dashboard] (Stitch "Operational Console" design).
  *
- * Shortcode [easylugg_dashboard2] on /dashboard-2/. Read-only frame:
- * sidebar + header + empty content regions. No booking data is queried
- * or rendered yet (that arrives in D2-02/D2-03/D2-04).
+ * Screens: overview (KPI, booking list, detail, tracking, proof) and the
+ * hosted Create booking / Settings / edit / detail screens of the previous
+ * dashboard (EasyLugg_Dashboard), which are reused unchanged.
  *
- * Layout follows the Stitch screen "EasyLugg Dashboard 2 - Operational
- * Console" (company project 17483541559657137315, 2560x3004): fixed navy
- * sidebar, fixed white header, KPI row, 3-column workspace
- * (List | Detail | Live Tracking + Exception), Proof & Support row,
- * floating switch button. All styling is plain CSS in
- * assets/dashboard2/dashboard2.css (no Tailwind CDN, no external fonts).
- * Sample data from the Stitch screen (booking codes, guest names, KPI
- * numbers, photos) is NEVER copied into this file — the regions stay
- * empty until D2-02/D2-03/D2-04 fill them with real database data.
- *
- * Permissions: everyone with easylugg_view_dashboard sees Dashboard 2
- * (D2-07). The Settings menu item is Admin-only (easylugg_manage_config).
- * The switch button is a static link to Dashboard 1 for now; the
- * toggle/remember behaviour is built in D2-05.
+ * Permissions: everyone with easylugg_view_dashboard. The Settings menu item
+ * is Admin-only (easylugg_manage_config). Kill switch: option
+ * easylugg_d2_enabled = 0 serves the previous dashboard again.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,7 +25,6 @@ final class EasyLugg_D2 {
 	 * @return void
 	 */
 	public static function hooks() {
-		add_shortcode( 'easylugg_dashboard2', array( __CLASS__, 'render_shortcode' ) );
 		// Dashboard 2 replaces the old dashboard under the SAME shortcode, so the
 		// live page content stays [easylugg_dashboard]. Registered on init (after
 		// Dashboard 1 registered its own) so ours wins; Dashboard 1's render
@@ -92,7 +80,7 @@ final class EasyLugg_D2 {
 	}
 
 	/**
-	 * Whether the current request is a page carrying [easylugg_dashboard2].
+	 * Whether the current request is a page carrying [easylugg_dashboard].
 	 * Mirrors EasyLugg_Booking_Plugin::is_dashboard_request().
 	 *
 	 * @return bool
@@ -105,7 +93,7 @@ final class EasyLugg_D2 {
 		if ( ! ( $post instanceof WP_Post ) || ! self::is_enabled() ) {
 			return false; // Kill switch off: Dashboard 1 serves the page on its own.
 		}
-		return has_shortcode( $post->post_content, 'easylugg_dashboard' ) || has_shortcode( $post->post_content, 'easylugg_dashboard2' );
+		return has_shortcode( $post->post_content, 'easylugg_dashboard' );
 	}
 
 	/**
@@ -113,17 +101,13 @@ final class EasyLugg_D2 {
 	 *  home    = Dashboard 2 overview (KPI, list, detail, tracking, proof)
 	 *  embed   = a Dashboard 1 screen (bookings table, detail, edit, create,
 	 *            settings) hosted inside the Dashboard 2 shell
-	 *  classic = the untouched Dashboard 1 page (?classic=1)
-	 *
+		 *
 	 * @return string
 	 */
 	public static function view_mode() {
 		$has = function ( $key ) {
 			return isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) && '' !== (string) $_GET[ $key ]; // phpcs:ignore WordPress.Security.NonceVerification
 		};
-		if ( $has( 'classic' ) ) {
-			return 'classic';
-		}
 		foreach ( array( 'view', 'edit', 'tab', 'mode', 'q' ) as $key ) {
 			if ( $has( $key ) ) {
 				return 'embed';
@@ -355,11 +339,6 @@ final class EasyLugg_D2 {
 		}
 
 		$mode = self::view_mode();
-		if ( 'classic' === $mode ) {
-			return '<div class="eld2-classic">' . EasyLugg_Dashboard::render_shortcode() . '</div>'
-				. '<aside class="eld2-switch eld2-switch-classic"><a href="' . esc_url( self::page_url() ) . '">&#8646; ' . esc_html( self::t( 'switch.to_dashboard2' ) ) . '</a></aside>';
-		}
-
 		ob_start();
 		// eld2-app = app shell inside the theme page (site header/footer stay).
 		echo '<div class="eld2 eld2-app" id="eld2">';
@@ -383,7 +362,6 @@ final class EasyLugg_D2 {
 		}
 		echo '</main>';
 		echo '</div>';
-		self::render_switch();
 		echo '</div>';
 		return (string) ob_get_clean();
 	}
@@ -492,20 +470,6 @@ final class EasyLugg_D2 {
 				</span>
 			</div>
 		</header>
-		<?php
-	}
-
-	/**
-	 * Floating switch button (bottom right). Static link to Dashboard 1
-	 * for now; the toggle/remember behaviour is D2-05.
-	 *
-	 * @return void
-	 */
-	private static function render_switch() {
-		?>
-		<aside class="eld2-switch">
-			<a href="<?php echo esc_url( self::page_url( array( 'classic' => '1' ) ) ); ?>">&#8646; <?php echo esc_html( self::t( 'switch.to_dashboard1' ) ); ?></a>
-		</aside>
 		<?php
 	}
 
