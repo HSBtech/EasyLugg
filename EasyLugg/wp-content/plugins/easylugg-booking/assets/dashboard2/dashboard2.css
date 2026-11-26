@@ -1,0 +1,1587 @@
+/* Dashboard 2 — Stitch "Operational Console" design, plain CSS.
+   No Tailwind CDN, no external fonts. Tokens from the Stitch screen
+   (company project, 2560x3004): navy #025282, accent #0294BB,
+   background #F4F8FA, card #ffffff, border #D9E3E8, text #171c1e,
+   muted #3e484e. Font stack: Plus Jakarta Sans (theme) with system
+   fallback. Layout: fixed navy sidebar (220px) + fixed white header
+   (64px) + KPI row + 3-column workspace (List 5 / Detail 4 /
+   Tracking 3) + Proof row + floating switch button. The content
+   regions are empty in D2-01; D2-03/D2-04 fill them with real data. */
+
+.eld2 {
+	font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	color: #171c1e;
+	background: #f6fafc;
+}
+
+/* ---- Sidebar (fixed, navy) ---- */
+.eld2-side {
+	position: fixed;
+	left: 0;
+	top: var(--eld2-top, 0px);
+	height: calc(100% - var(--eld2-top, 0px));
+	width: 220px;
+	background: #025282;
+	z-index: 50;
+	display: flex;
+	flex-direction: column;
+}
+
+.eld2-logo {
+	height: 64px;
+	padding: 0 24px;
+	display: flex;
+	align-items: center;
+	font-weight: 800;
+	font-size: 20px;
+	letter-spacing: .02em;
+	color: #fff;
+	white-space: nowrap;
+}
+
+.eld2-nav {
+	flex: 1;
+	padding: 16px 12px;
+}
+
+.eld2-nav a {
+	display: block;
+	padding: 10px 16px;
+	border-radius: 8px;
+	color: rgba(255, 255, 255, .7);
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background .15s, color .15s;
+}
+
+.eld2-nav a:hover {
+	background: rgba(2, 148, 187, .3);
+	color: #fff;
+}
+
+.eld2-nav a.is-active {
+	background: #0294bb;
+	color: #fff;
+	font-weight: 600;
+}
+
+/* ---- Body (offset by the sidebar) ---- */
+.eld2-body {
+	padding-left: 220px;
+}
+
+/* ---- Header (fixed, white) ---- */
+.eld2-head {
+	position: fixed;
+	top: var(--eld2-top, 0px);
+	left: 220px;
+	right: 0;
+	height: 64px;
+	background: #fff;
+	border-bottom: 1px solid #d9e3e8;
+	z-index: 40;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	padding: 0 32px;
+}
+
+.eld2-title {
+	line-height: 1.25;
+	min-width: 0;
+}
+
+.eld2-title h1 {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .05em;
+	text-transform: uppercase;
+	color: #025282;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.eld2-title p {
+	font-size: 12px;
+	color: #3e484e;
+	margin: 2px 0 0;
+	white-space: nowrap;
+}
+
+.eld2-search {
+	margin-left: auto;
+}
+
+.eld2-search input {
+	width: 320px;
+	height: 36px;
+	padding: 0 12px 0 36px;
+	border-radius: 8px;
+	border: 1px solid #d9e3e8;
+	background: #fff;
+	color: #171c1e;
+	font: inherit;
+	font-size: 12px;
+}
+
+.eld2-search input::placeholder {
+	color: #6e797e;
+}
+
+.eld2-search input:focus {
+	outline: none;
+	border-color: #0294bb;
+	box-shadow: 0 0 0 1px #0294bb;
+}
+
+.eld2-bell {
+	background: transparent;
+	border: 0;
+	color: #3e484e;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 6px;
+	border-radius: 8px;
+}
+
+.eld2-bell:hover {
+	background: #eaeef0;
+	color: #171c1e;
+}
+
+.eld2-acct {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-left: 8px;
+	border-left: 1px solid #d9e3e8;
+}
+
+.eld2-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 9999px;
+	background: #0294bb;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+.eld2-acct-text {
+	line-height: 1.25;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.eld2-acct-name {
+	font-weight: 600;
+	font-size: 12px;
+	color: #025282;
+	display: block;
+}
+
+.eld2-acct-role {
+	font-size: 11px;
+	color: #3e484e;
+	display: block;
+}
+
+/* ---- Main content ---- */
+.eld2-main {
+	width: 100%;
+	padding-top: 64px;
+	background: #f4f8fa;
+	min-height: 100vh;
+	box-sizing: border-box;
+}
+
+.eld2-main > .eld2-kpi,
+.eld2-main > .eld2-work,
+.eld2-main > .eld2-proof {
+	margin: 24px 32px 0;
+}
+
+.eld2-main > .eld2-proof {
+	margin-bottom: 24px;
+}
+
+/* KPI row: 6 tiles (filled by D2-03). */
+.eld2-kpi {
+	display: grid;
+	gap: 16px;
+	grid-template-columns: repeat(6, 1fr);
+	min-height: 96px;
+}
+
+/* 3-column workspace: List 5 / Detail 4 / Tracking 3. */
+.eld2-work {
+	display: grid;
+	gap: 24px;
+	grid-template-columns: repeat(12, 1fr);
+	align-items: start;
+}
+
+.eld2-list {
+	grid-column: span 5;
+}
+
+.eld2-detail {
+	grid-column: span 4;
+}
+
+.eld2-tracking {
+	grid-column: span 3;
+}
+
+.eld2-list,
+.eld2-detail,
+.eld2-proof {
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	min-height: 120px;
+}
+
+/* Tracking column: transparent stack (Live Tracking card + Exception
+   card, both rendered by D2-04). */
+.eld2-tracking {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	min-height: 120px;
+}
+
+/* Inner card (used inside the tracking column). */
+.eld2-card {
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+}
+
+.eld2-proof {
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+/* ---- Floating switch button ---- */
+.eld2-switch {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	z-index: 50;
+}
+
+.eld2-switch a {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+	font-size: 12px;
+	font-weight: 600;
+	color: #025282;
+	text-decoration: none;
+	transition: background .15s, box-shadow .15s;
+}
+
+.eld2-switch a:hover {
+	background: #eaf4f7;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+}
+
+/* ---- Gate (login / forbidden / disabled) ---- */
+.eld2-gate {
+	max-width: 560px;
+	margin: 60px auto;
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 12px;
+	padding: 28px;
+	text-align: center;
+}
+
+/* ---- Components (filled by D2-03/D2-04; styles from the Stitch design) ---- */
+
+/* KPI tile. */
+.eld2-kpi-tile {
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	padding: 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.eld2-kpi-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.eld2-kpi-label {
+	font-size: 12px;
+	color: #3e484e;
+	font-weight: 500;
+}
+
+.eld2-kpi-bottom {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-top: 8px;
+}
+
+.eld2-kpi-value {
+	font-size: 24px;
+	font-weight: 700;
+	color: #025282;
+	font-variant-numeric: tabular-nums;
+}
+
+.eld2-kpi-delta {
+	font-size: 11px;
+	font-weight: 600;
+	color: #00647f;
+	background: #eaf4f7;
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-variant-numeric: tabular-nums;
+}
+
+.eld2-kpi-delta.bad {
+	color: #ba1a1a;
+	background: #ffdad6;
+}
+
+/* Card header (list / detail / tracking / proof). */
+.eld2-card-head {
+	padding: 16px;
+	border-bottom: 1px solid #d9e3e8;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.eld2-card-head h2 {
+	font-size: 16px;
+	font-weight: 600;
+	color: #025282;
+	margin: 0;
+}
+
+.eld2-card-head p {
+	font-size: 12px;
+	color: #3e484e;
+	margin: 2px 0 0;
+}
+
+/* Status pill. */
+.eld2-pill {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.eld2-pill.transit { background: #0294bb; color: #fff; }
+.eld2-pill.pending { color: #855000; background: rgba(255, 220, 187, .4); border: 1px solid #d0872a; }
+.eld2-pill.confirmed { color: #025282; background: #a9dfea; }
+.eld2-pill.collected { color: #0294bb; background: #eaf4f7; border: 1px solid rgba(2, 148, 187, .3); }
+.eld2-pill.delivered { background: #025282; color: #fff; }
+.eld2-pill.completed { color: #025282; background: #fff; border: 1px solid #025282; }
+.eld2-pill.cancelled, .eld2-pill.noshow { color: #3e484e; background: #dfe3e5; }
+
+/* Booking list table. */
+.eld2-table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+	font-size: 12px;
+	color: #4a4a4a;
+}
+
+.eld2-table thead {
+	background: #eaf4f7;
+	color: #025282;
+	font-weight: 600;
+	border-bottom: 1px solid #d9e3e8;
+}
+
+.eld2-table th, .eld2-table td {
+	padding: 10px 12px;
+}
+
+.eld2-table tbody tr {
+	border-bottom: 1px solid #d9e3e8;
+	cursor: pointer;
+}
+
+.eld2-table tbody tr:hover {
+	background: #f0f4f6;
+}
+
+.eld2-table tbody tr.is-selected {
+	background: rgba(169, 223, 234, .3);
+	border-left: 3px solid #0294bb;
+	font-weight: 500;
+}
+
+/* Filter tabs. */
+.eld2-tabs {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 12px 12px 8px;
+	border-bottom: 1px solid #d9e3e8;
+	overflow-x: auto;
+	font-size: 12px;
+}
+
+.eld2-tabs button {
+	padding: 4px 10px;
+	border-radius: 4px;
+	border: 0;
+	background: transparent;
+	color: #3e484e;
+	font: inherit;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.eld2-tabs button:hover {
+	background: #eaf4f7;
+	color: #025282;
+}
+
+.eld2-tabs button.is-active {
+	background: #025282;
+	color: #fff;
+	font-weight: 600;
+}
+
+/* Detail sections. */
+.eld2-sec {
+	padding: 12px 16px;
+	border-bottom: 1px solid #d9e3e8;
+}
+
+.eld2-sec:last-child {
+	border-bottom: 0;
+}
+
+.eld2-sec h3 {
+	font-size: 12px;
+	font-weight: 700;
+	color: #025282;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	margin: 0 0 8px;
+}
+
+.eld2-kv {
+	display: flex;
+	justify-content: space-between;
+	padding: 2px 0;
+	font-size: 12px;
+}
+
+.eld2-kv dt {
+	color: #3e484e;
+}
+
+.eld2-kv dd {
+	margin: 0;
+	font-weight: 500;
+	color: #171c1e;
+	text-align: right;
+}
+
+/* Buttons. */
+.eld2-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background .15s;
+}
+
+.eld2-btn.primary {
+	background: #0294bb;
+	color: #fff;
+	border: 0;
+}
+
+.eld2-btn.primary:hover {
+	background: #007ea0;
+}
+
+.eld2-btn.ghost {
+	background: #fff;
+	color: #025282;
+	border: 1px solid #d9e3e8;
+}
+
+.eld2-btn.ghost:hover {
+	background: #eaf4f7;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1279px) {
+	.eld2-kpi {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.eld2-list {
+		grid-column: span 6;
+	}
+	.eld2-detail {
+		grid-column: span 6;
+	}
+	.eld2-tracking {
+		grid-column: span 12;
+	}
+}
+
+@media (max-width: 768px) {
+	.eld2-side {
+		position: static;
+		width: auto;
+		height: auto;
+	}
+	.eld2-logo {
+		height: 56px;
+	}
+	.eld2-nav {
+		display: flex;
+		gap: 6px;
+		padding: 8px 12px;
+	}
+	.eld2-body {
+		padding-left: 0;
+	}
+	.eld2-head {
+		position: static;
+		height: auto;
+		flex-wrap: wrap;
+		padding: 12px 16px;
+		gap: 12px;
+	}
+	.eld2-title h1,
+	.eld2-title p {
+		white-space: normal;
+	}
+	.eld2-search {
+		margin-left: 0;
+		flex: 1;
+	}
+	.eld2-search input {
+		width: 100%;
+		min-width: 0;
+	}
+	.eld2-main {
+		padding-top: 0;
+	}
+	.eld2-main > .eld2-kpi,
+	.eld2-main > .eld2-work,
+	.eld2-main > .eld2-proof {
+		margin: 16px 16px 0;
+	}
+	.eld2-main > .eld2-proof {
+		margin-bottom: 16px;
+	}
+	.eld2-kpi {
+		grid-template-columns: 1fr;
+	}
+	.eld2-list,
+	.eld2-detail,
+	.eld2-tracking {
+		grid-column: span 12;
+	}
+}
+
+/* ---- App shell (26/11, v2) ----
+   The app stays INSIDE the theme page (site header/footer remain). It breaks
+   out of the Elementor boxed container to full viewport width, then lays out
+   sidebar + body as a flex row. Nothing is position:fixed except the switch
+   button, so the WP admin bar and the theme header never collide with it. */
+.eld2.eld2-app {
+	display: flex;
+	align-items: stretch;
+	width: 100vw;
+	max-width: 100vw;
+	margin-left: calc(50% - 50vw);
+	min-height: 80vh;
+	background: #f4f8fa;
+	box-sizing: border-box;
+}
+
+.eld2.eld2-app *,
+.eld2.eld2-app *::before,
+.eld2.eld2-app *::after {
+	box-sizing: border-box;
+}
+
+.eld2.eld2-app .eld2-side {
+	position: static;
+	flex: 0 0 220px;
+	width: 220px;
+	height: auto;
+}
+
+.eld2.eld2-app .eld2-body {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding-left: 0;
+}
+
+.eld2.eld2-app .eld2-head {
+	position: static;
+	height: auto;
+	min-height: 64px;
+	padding: 10px 32px;
+	flex-wrap: wrap;
+}
+
+.eld2.eld2-app .eld2-main {
+	padding-top: 0;
+	min-height: 0;
+}
+
+/* Theme resets: headings and links must not inherit theme sizes/underlines. */
+.eld2.eld2-app .eld2-title h1 {
+	font-size: 13px;
+	line-height: 1.3;
+	font-weight: 700;
+	letter-spacing: .05em;
+	text-transform: uppercase;
+	color: #025282;
+	margin: 0;
+	padding: 0;
+	white-space: normal;
+}
+
+.eld2.eld2-app .eld2-title p {
+	font-size: 12px;
+	margin: 2px 0 0;
+	white-space: normal;
+}
+
+.eld2.eld2-app a,
+.eld2.eld2-app a:hover {
+	text-decoration: none;
+}
+
+.eld2.eld2-app .eld2-nav a {
+	color: rgba(255, 255, 255, .8);
+}
+
+.eld2.eld2-app .eld2-nav a.is-active,
+.eld2.eld2-app .eld2-nav a:hover {
+	color: #fff;
+}
+
+.eld2.eld2-app h2,
+.eld2.eld2-app h3 {
+	font-family: inherit;
+	margin: 0;
+	text-transform: none;
+	letter-spacing: 0;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-bell {
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border-radius: 50%;
+	font-size: 16px;
+	line-height: 1;
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-switch {
+	position: fixed;
+	right: 24px;
+	bottom: 24px;
+	z-index: 9990;
+}
+
+@media (max-width: 768px) {
+	.eld2.eld2-app {
+		flex-direction: column;
+	}
+	.eld2.eld2-app .eld2-side {
+		flex: 0 0 auto;
+		width: 100%;
+	}
+}
+
+/* ---- Live data components (Phase 1A) ---- */
+.eld2-live { font-size: 10px; font-weight: 700; color: #1b7a3a; }
+.eld2-live.is-off { color: #c25e00; }
+.eld2-pad { padding: 16px; }
+.eld2-muted { color: #3e484e; font-size: 13px; }
+.eld2-h { padding: 0; margin: 0 0 12px; font-size: 15px; }
+.eld2-link { background: none; border: 0; color: #0294bb; cursor: pointer; padding: 0; font: inherit; text-decoration: underline; }
+.eld2-card-head h2 { font-size: 15px; font-weight: 700; }
+.eld2-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px 0; }
+.eld2-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; }
+.eld2-date { height: 32px; border: 1px solid #d9e3e8; border-radius: 6px; padding: 0 8px; font: inherit; font-size: 12px; background: #fff; }
+.eld2-chips { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.eld2-chip { border: 1px solid #d9e3e8; background: #fff; color: #025282; border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.eld2-chip.is-on { background: #0294bb; border-color: #0294bb; color: #fff; }
+.eld2-chip:disabled { opacity: .4; cursor: default; }
+.eld2-tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 0 16px; border-bottom: 1px solid #d9e3e8; }
+.eld2-tab { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 10px; font-size: 12px; font-weight: 600; color: #3e484e; cursor: pointer; }
+.eld2-tab.is-on { color: #025282; border-bottom-color: #0294bb; }
+.eld2-count { background: #eaf4f7; border-radius: 10px; padding: 0 6px; font-size: 11px; }
+.eld2-table-wrap { overflow-x: auto; }
+.eld2-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.eld2-table th { text-align: left; padding: 8px 12px; color: #3e484e; font-weight: 600; border-bottom: 1px solid #d9e3e8; background: #f4f8fa; }
+.eld2-table td { padding: 10px 12px; border-bottom: 1px solid #eaf0f3; }
+.eld2-row { cursor: pointer; }
+.eld2-row:hover { background: #f4f8fa; }
+.eld2-row.is-selected { box-shadow: inset 3px 0 0 #0294bb; background: #eaf4f7; }
+.eld2-empty { text-align: center; color: #3e484e; padding: 24px; }
+.eld2-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ba1a1a; margin-right: 6px; }
+.eld2-foot { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; font-size: 12px; color: #3e484e; }
+.eld2-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: #e5e9eb; color: #3e484e; }
+.eld2-pill.is-pickup { background: #fdebd0; color: #8a5a12; }
+.eld2-pill.is-transit { background: #d5ecf4; color: #025282; }
+.eld2-pill.is-delivered { background: #d8f0e0; color: #1b7a3a; }
+.eld2-pill.s-cancelled { background: #e5e9eb; color: #6b7378; }
+.eld2-pill.s-no_show { background: #cfd5d8; color: #3e484e; }
+.eld2-sec { padding: 12px 16px; border-top: 1px solid #eaf0f3; }
+.eld2-sec h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+.eld2-kv { margin: 0; display: grid; grid-template-columns: 38% 1fr; gap: 6px 12px; font-size: 12px; }
+.eld2-kv dt { color: #3e484e; }
+.eld2-kv dd { margin: 0; color: #171c1e; word-break: break-word; }
+.eld2-kv-row { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.eld2-kv-row div { display: block; }
+.eld2-timeline { list-style: none; margin: 0; padding: 12px 16px; }
+.eld2-timeline li { display: flex; gap: 10px; padding: 6px 0; font-size: 12px; color: #3e484e; }
+.eld2-timeline li.is-now { color: #025282; font-weight: 600; }
+.eld2-time { flex: 0 0 44px; font-variant-numeric: tabular-nums; }
+.eld2-exc .eld2-pad { background: #eaf4f7; margin: 0; border-radius: 0 0 8px 8px; }
+.eld2-exc.has-exc .eld2-pad { background: #ffeceb; }
+.eld2-proofs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.eld2-pbox { border: 1px dashed #d9e3e8; border-radius: 8px; padding: 14px; background: #f4f8fa; display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.eld2-pbox.has { border-style: solid; background: #eaf4f7; }
+@media (max-width: 768px) { .eld2-proofs { grid-template-columns: 1fr; } .eld2-kv { grid-template-columns: 1fr 1fr; } }
+
+/* ---- Theme-proofing (v3): neutralise Elementor/theme button, input, link,
+   table and font rules inside the app so it matches the Stitch design. ---- */
+.eld2.eld2-app {
+	font-size: 13px;
+	line-height: 1.45;
+	color: #171c1e;
+}
+
+.eld2.eld2-app button,
+.eld2.eld2-app input,
+.eld2.eld2-app a {
+	font-family: inherit;
+	text-transform: none;
+	letter-spacing: 0;
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.eld2.eld2-app button {
+	appearance: none;
+	-webkit-appearance: none;
+	border-radius: 6px;
+	border: 1px solid #d9e3e8;
+	background: #fff;
+	color: #025282;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	min-height: 0;
+	height: auto;
+	padding: 5px 10px;
+	margin: 0;
+	cursor: pointer;
+	transition: background .15s, color .15s;
+}
+
+.eld2.eld2-app button:hover,
+.eld2.eld2-app button:focus {
+	background: #eaf4f7;
+	color: #025282;
+	border-color: #d9e3e8;
+	outline: none;
+}
+
+.eld2.eld2-app button:focus-visible {
+	outline: 2px solid #0294bb;
+	outline-offset: 1px;
+}
+
+.eld2.eld2-app button.eld2-chip.is-on,
+.eld2.eld2-app button.eld2-chip.is-on:hover {
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+}
+
+.eld2.eld2-app button.eld2-chip:disabled {
+	opacity: .45;
+	cursor: default;
+	background: #fff;
+	color: #025282;
+}
+
+.eld2.eld2-app button.eld2-tab {
+	background: transparent;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	color: #3e484e;
+	padding: 8px 10px;
+}
+
+.eld2.eld2-app button.eld2-tab.is-on {
+	color: #025282;
+	border-bottom-color: #0294bb;
+	background: transparent;
+}
+
+.eld2.eld2-app button.eld2-tab:hover {
+	background: #f4f8fa;
+}
+
+.eld2.eld2-app button.eld2-link {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: #0294bb;
+	font-weight: 500;
+	text-decoration: underline;
+}
+
+.eld2.eld2-app button.eld2-bell {
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border-radius: 50%;
+	font-size: 15px;
+}
+
+.eld2.eld2-app .eld2-count {
+	background: #eaf4f7;
+	color: #025282;
+	display: inline-block;
+	min-width: 18px;
+	text-align: center;
+	border-radius: 9px;
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.eld2.eld2-app a.eld2-btn,
+.eld2.eld2-app a.eld2-btn:visited {
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 10px;
+	border: 1px solid #d9e3e8;
+	border-radius: 6px;
+	background: #fff;
+	color: #025282;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.eld2.eld2-app a.eld2-btn:hover {
+	background: #eaf4f7;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-card-head a.eld2-btn {
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+}
+
+.eld2.eld2-app .eld2-card-head a.eld2-btn:hover {
+	background: #025282;
+	border-color: #025282;
+	color: #fff;
+}
+
+.eld2.eld2-app input[type="search"],
+.eld2.eld2-app input[type="date"] {
+	border: 1px solid #d9e3e8;
+	border-radius: 6px;
+	background: #fff;
+	color: #3e484e;
+	font-size: 12px;
+	height: 34px;
+	line-height: 1.2;
+	padding: 0 10px;
+	margin: 0;
+	box-shadow: none;
+	width: auto;
+	min-height: 0;
+}
+
+.eld2.eld2-app .eld2-search input[type="search"] {
+	width: 300px;
+	max-width: 100%;
+}
+
+.eld2.eld2-app input:focus {
+	outline: 2px solid #0294bb;
+	outline-offset: 0;
+	border-color: #0294bb;
+}
+
+.eld2.eld2-app .eld2-nav a {
+	display: block;
+	font-size: 14px;
+	font-weight: 500;
+	padding: 10px 16px;
+	margin-bottom: 2px;
+}
+
+.eld2.eld2-app .eld2-logo {
+	font-size: 20px;
+	font-weight: 800;
+	color: #fff;
+}
+
+.eld2.eld2-app .eld2-card-head {
+	padding: 14px 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	border-bottom: 1px solid #d9e3e8;
+}
+
+.eld2.eld2-app .eld2-card-head h2 {
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-sec h3 {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	color: #025282;
+	margin: 0 0 8px;
+}
+
+.eld2.eld2-app .eld2-h {
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.eld2.eld2-app table,
+.eld2.eld2-app th,
+.eld2.eld2-app td {
+	border-left: 0;
+	border-right: 0;
+	background: transparent;
+	color: #171c1e;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.eld2.eld2-app table {
+	border-collapse: collapse;
+	margin: 0;
+	width: 100%;
+}
+
+.eld2.eld2-app .eld2-table th {
+	background: #f4f8fa;
+	color: #3e484e;
+	font-weight: 600;
+	text-align: left;
+	padding: 8px 12px;
+	border-top: 0;
+	border-bottom: 1px solid #d9e3e8;
+}
+
+.eld2.eld2-app .eld2-table td {
+	padding: 10px 12px;
+	border-top: 0;
+	border-bottom: 1px solid #eaf0f3;
+}
+
+.eld2.eld2-app .eld2-table tr:nth-child(even) td {
+	background: transparent;
+}
+
+.eld2.eld2-app .eld2-row:hover td {
+	background: #f4f8fa;
+}
+
+.eld2.eld2-app .eld2-row.is-selected td {
+	background: #eaf4f7;
+}
+
+.eld2.eld2-app .eld2-row.is-selected td:first-child {
+	box-shadow: inset 3px 0 0 #0294bb;
+}
+
+.eld2.eld2-app dl,
+.eld2.eld2-app dt,
+.eld2.eld2-app dd {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+.eld2.eld2-app dt {
+	color: #3e484e;
+	font-weight: 500;
+}
+
+.eld2.eld2-app dd {
+	color: #171c1e;
+	text-align: left;
+}
+
+.eld2.eld2-app .eld2-kv {
+	display: grid;
+	grid-template-columns: 38% 1fr;
+	gap: 6px 12px;
+}
+
+.eld2.eld2-app .eld2-kv a {
+	color: #0294bb;
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+}
+
+.eld2.eld2-app .eld2-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0;
+	padding: 0 12px;
+	border-bottom: 1px solid #d9e3e8;
+}
+
+.eld2.eld2-app .eld2-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 16px;
+	font-size: 12px;
+	color: #3e484e;
+}
+
+.eld2.eld2-app .eld2-pill {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+.eld2.eld2-app .eld2-timeline {
+	list-style: none;
+	margin: 0;
+	padding: 12px 16px;
+}
+
+.eld2.eld2-app .eld2-timeline li {
+	margin: 0;
+	padding: 6px 0;
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-switch a {
+	font-size: 12px;
+	color: #025282;
+}
+
+/* Keep the floating switch clear of third-party chat widgets (bottom right). */
+.eld2.eld2-app .eld2-switch {
+	right: 96px;
+	bottom: 20px;
+}
+
+.eld2.eld2-app .eld2-dl { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #3e484e; margin: 0; }
+
+/* ---- Dashboard 1 screens hosted inside the shell (Bookings, Settings, edit, create) ----
+   Dashboard 1's own markup and save handlers are reused; this only re-skins
+   them to the Dashboard 2 look and removes the duplicated header. */
+.eld2.eld2-app .eld2-embed {
+	padding: 24px 32px;
+}
+
+.eld2.eld2-app .eld2-embed .eld {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	font-size: 13px;
+	--eld-accent: #0294bb;
+	--eld-accent-hover: #025282;
+	--eld-accent-tint: rgba(2, 148, 187, .08);
+	--eld-accent-edge: rgba(2, 148, 187, .25);
+	--eld-ink: #171c1e;
+	--eld-muted: #3e484e;
+	--eld-line: #d9e3e8;
+	--eld-card: #fff;
+	--eld-hover: #eaf4f7;
+}
+
+.eld2.eld2-app .eld2-embed .eld-head-top,
+.eld2.eld2-app .eld2-embed .eld-search {
+	display: none;
+}
+
+.eld2.eld2-app .eld2-embed .eld-head {
+	margin-bottom: 16px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-nav a {
+	border: 1px solid #d9e3e8;
+	background: #fff;
+	border-radius: 6px;
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #025282;
+	text-decoration: none;
+}
+
+.eld2.eld2-app .eld2-embed .eld-nav a.is-active,
+.eld2.eld2-app .eld2-embed .eld-nav a.eld-primary {
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+}
+
+.eld2.eld2-app .eld2-embed .eld-card,
+.eld2.eld2-app .eld2-embed .eld-table-wrap {
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-table th {
+	background: #f4f8fa;
+	color: #3e484e;
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-table td {
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-btn {
+	border-radius: 6px;
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-btn.eld-primary {
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+}
+
+.eld2.eld2-app .eld2-embed h2,
+.eld2.eld2-app .eld2-embed h3,
+.eld2.eld2-app .eld2-embed h4 {
+	color: #025282;
+}
+
+.eld2-classic .eld {
+	margin-bottom: 80px;
+}
+
+/* ---- Create a booking / Settings (Stitch "Create Booking", concise) ---- */
+.eld2.eld2-app .eld2-embed[data-screen="create"],
+.eld2.eld2-app .eld2-embed[data-screen="config"] {
+	padding: 32px;
+}
+
+/* D1's own header (nav buttons, search) is replaced by the shell. */
+.eld2.eld2-app .eld2-embed[data-screen="create"] .eld-head,
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-head,
+.eld2.eld2-app .eld2-hide,
+.eld2.eld2-app .eld2-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="create"] .eld-head,
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-head {
+	display: none;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="create"] .eld-card {
+	max-width: 880px;
+	padding: 0;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="create"] .eld-form {
+	display: block;
+	padding: 24px 24px 0;
+}
+
+.eld2.eld2-app .eld2-embed .eld-form .eld-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 14px 16px;
+	margin: 0 0 16px;
+}
+
+.eld2.eld2-app .eld2-embed .eld-form .eld-grid[hidden],
+.eld2.eld2-app .eld2-embed .eld-form [hidden] {
+	display: none;
+}
+
+.eld2.eld2-app .eld2-embed .eld-form .eld-sub,
+.eld2.eld2-app .eld2-embed .eld-form .eld-wide {
+	grid-column: 1 / -1;
+}
+
+.eld2.eld2-app .eld2-embed .eld-form .eld-sub {
+	margin: 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-embed .eld-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 0;
+}
+
+.eld2.eld2-app .eld2-embed .eld-field > span {
+	font-size: 12px;
+	font-weight: 600;
+	color: #4a4a4a;
+}
+
+.eld2.eld2-app .eld2-embed .eld-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.eld2.eld2-app .eld2-embed .eld-field select,
+.eld2.eld2-app .eld2-embed .eld-field textarea {
+	width: 100%;
+	height: auto;
+	min-height: 36px;
+	padding: 7px 10px;
+	font-size: 13px !important;
+	border: 1px solid #d9e3e8 !important;
+	border-radius: 8px !important;
+	background: #fff !important;
+	color: #4a4a4a !important;
+	box-shadow: none !important;
+}
+
+.eld2.eld2-app .eld2-embed .eld-field input:focus,
+.eld2.eld2-app .eld2-embed .eld-field select:focus,
+.eld2.eld2-app .eld2-embed .eld-field textarea:focus {
+	border-color: #0294bb !important;
+	outline: 2px solid rgba(169, 223, 234, .6);
+}
+
+.eld2.eld2-app .eld2-embed .eld-field input[type="file"] {
+	padding: 12px;
+	border: 1px dashed #d9e3e8;
+	border-radius: 8px;
+	background: rgba(234, 244, 247, .5);
+	font-size: 12px;
+}
+
+.eld2.eld2-app .eld2-sec-title {
+	margin: 8px 0 12px;
+	padding-top: 16px;
+	border-top: 1px solid #d9e3e8;
+	font-size: 16px;
+	font-weight: 600;
+	color: #025282;
+}
+
+/* Segmented control */
+.eld2.eld2-app .eld2-seg {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	gap: 6px;
+	padding: 4px;
+	background: #eaf4f7;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+}
+
+.eld2.eld2-app .eld2-seg-btn {
+	padding: 7px 8px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: #4a4a4a;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.eld2.eld2-app .eld2-seg-btn.is-on,
+.eld2.eld2-app .eld2-seg-btn.is-on:hover {
+	background: #0294bb;
+	color: #fff;
+	font-weight: 600;
+}
+
+.eld2.eld2-app .eld2-seg-btn:disabled {
+	opacity: .4;
+	cursor: default;
+}
+
+.eld2.eld2-app .eld2-embed [data-eld-route]:not(.eld2-visually-hidden) + .eld2-seg {
+	margin-top: 0;
+}
+
+/* The Route row spans the full width. */
+.eld2.eld2-app .eld2-embed .eld-field:has([data-eld-route]),
+.eld2.eld2-app .eld2-embed .eld-field:has([data-eld-source]) {
+	grid-column: 1 / -1;
+}
+
+/* Stepper */
+.eld2.eld2-app .eld2-step {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	padding: 4px;
+	background: #fff;
+}
+
+.eld2.eld2-app .eld2-step input {
+	width: 48px !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	text-align: center;
+	font-weight: 600;
+	color: #025282 !important;
+	-moz-appearance: textfield;
+}
+
+.eld2.eld2-app .eld2-step input::-webkit-outer-spin-button,
+.eld2.eld2-app .eld2-step input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.eld2.eld2-app .eld2-step-btn {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	background: #eaf4f7;
+	color: #025282;
+	font-size: 16px;
+	line-height: 1;
+}
+
+.eld2.eld2-app .eld2-step-btn:hover {
+	background: #a9dfea;
+}
+
+/* Sticky action bar */
+.eld2.eld2-app .eld2-bar-foot {
+	position: sticky;
+	bottom: 0;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	margin: 0 -24px;
+	padding: 14px 24px;
+	background: #fff;
+	border-top: 1px solid #d9e3e8;
+	border-radius: 0 0 8px 8px;
+}
+
+.eld2.eld2-app .eld2-bar-foot p {
+	margin: 0 auto 0 0;
+	font-size: 11px;
+	color: #4a4a4a;
+}
+
+.eld2.eld2-app .eld2-bar-foot .eld-btn {
+	min-height: 0;
+	padding: 8px 16px;
+	font-size: 13px;
+	font-weight: 600;
+	border-radius: 8px;
+}
+
+.eld2.eld2-app .eld2-bar-foot .eld-primary {
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+}
+
+.eld2.eld2-app .eld2-bar-foot .eld-primary:hover {
+	background: #025282;
+	border-color: #025282;
+}
+
+.eld2.eld2-app .eld2-cancel {
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	color: #025282;
+}
+
+/* Settings: section index on the left, one card per section on the right */
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld.eld2-config {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 200px;
+	gap: 0 24px;
+	align-items: start;
+	max-width: 1100px;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld.eld2-config > * {
+	grid-column: 1;
+}
+
+.eld2.eld2-app .eld2-index {
+	grid-column: 2 !important;
+	grid-row: 1 / span 20;
+	position: sticky;
+	top: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.eld2.eld2-app .eld2-index a {
+	padding: 8px 12px;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #4a4a4a;
+}
+
+.eld2.eld2-app .eld2-index a:hover {
+	background: #eaf4f7;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-card {
+	margin: 0 0 16px;
+	padding: 20px;
+	background: #fff;
+	border: 1px solid #d9e3e8;
+	border-radius: 8px;
+	scroll-margin-top: 16px;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-card > h4 {
+	margin: 0 0 14px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #025282;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px 16px;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form > input[type="hidden"] {
+	display: none;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form > p,
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form > .eld-field:has(textarea) {
+	grid-column: 1 / -1;
+	margin: 0;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form > button[type="submit"] {
+	grid-column: 1 / -1;
+	justify-self: end;
+	min-height: 0;
+	padding: 8px 18px;
+	background: #0294bb;
+	border-color: #0294bb;
+	color: #fff;
+	font-size: 13px;
+	border-radius: 8px;
+}
+
+.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form > button[type="submit"]:hover {
+	background: #025282;
+}
+
+@media (max-width: 900px) {
+	.eld2.eld2-app .eld2-embed .eld-form .eld-grid {
+		grid-template-columns: 1fr;
+	}
+	.eld2.eld2-app .eld2-embed[data-screen="config"] .eld.eld2-config {
+		display: block;
+	}
+	.eld2.eld2-app .eld2-index {
+		position: static;
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin-bottom: 12px;
+	}
+	.eld2.eld2-app .eld2-embed[data-screen="config"] .eld-form {
+		grid-template-columns: 1fr;
+	}
+	.eld2.eld2-app .eld2-seg {
+		grid-auto-flow: row;
+		grid-template-columns: 1fr 1fr;
+	}
+}
